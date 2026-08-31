@@ -2,7 +2,6 @@ from dataclasses import replace
 from datetime import datetime, timezone
 
 from app.controller_resolver.fetcher import HttpxPageFetcher
-from app.controller_resolver.openclaw import NullControllerTextInterpreter
 from app.controller_resolver.parser import (
     candidate_urls,
     find_brand,
@@ -20,7 +19,6 @@ from app.controller_resolver.parser import (
 )
 from app.controller_resolver.types import (
     ControllerResolutionResult,
-    ControllerTextInterpreter,
     EvidenceItem,
     FetchedPage,
     PageFetcher,
@@ -31,18 +29,20 @@ class ControllerResolver:
     def __init__(
         self,
         fetcher: PageFetcher | None = None,
-        interpreter: ControllerTextInterpreter | None = None,
         max_pages: int = 20,
     ) -> None:
         self.fetcher = fetcher or HttpxPageFetcher()
-        self.interpreter = interpreter or NullControllerTextInterpreter()
         self.max_pages = max_pages
 
     def resolve(self, raw_domain: str) -> ControllerResolutionResult:
+        result, _ = self.resolve_with_pages(raw_domain)
+        return result
+
+    def resolve_with_pages(self, raw_domain: str) -> tuple[ControllerResolutionResult, list[FetchedPage]]:
         domain = normalize_domain(raw_domain)
         pages = self._fetch_pages(domain)
         result = self._extract(domain, pages)
-        return self.interpreter.interpret(domain, pages, result)
+        return result, pages
 
     def _fetch_pages(self, domain: str) -> list[FetchedPage]:
         urls = candidate_urls(domain)

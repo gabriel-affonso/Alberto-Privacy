@@ -72,12 +72,9 @@ GMAIL_OAUTH_TOKEN_FILE=secrets/gmail_token.json
 GMAIL_DISCOVERY_MAX_RESULTS_PER_QUERY=50
 CONTROLLER_RESOLVER_MAX_PAGES=20
 OPENCLAW_ENABLED=false
-OPENCLAW_BASE_URL=
-OPENCLAW_TOKEN=
 OPENCLAW_MODEL=
-OPENCLAW_INVOKE_COMMAND=openclaw.invoke
-OPENCLAW_TIMEOUT_SECONDS=30
 OPENCLAW_MAX_INPUT_CHARS=12000
+ALBERTO_BRIDGE_TOKEN=
 GMAIL_OAUTH_SEND_TOKEN_FILE=secrets/gmail_send_token.json
 PRIVACY_USER_FULL_NAME=
 PRIVACY_USER_PREFERRED_EMAIL=
@@ -272,17 +269,9 @@ Every populated field is backed by an evidence item with `source_url` and `excer
 
 Each run is stored in `controller_resolutions` with the query timestamp and evidence payload. The latest verified values are mirrored on the company record. Conflicting controller names are returned as conflicts rather than silently selected.
 
-### Optional OpenClaw Interpretation
+### Optional Alberto/OpenClaw interpretation
 
-By default, `OPENCLAW_ENABLED=false`. When enabled, the resolver may call OpenClaw only after public pages have been fetched, and only to interpret the fetched text for missing ambiguous fields. It does not let OpenClaw browse or invent values.
-
-Expected command shape:
-
-```bash
-openclaw.invoke --tool llm-task --action json --args-json '{...}'
-```
-
-The OpenClaw result is accepted only when it includes evidence pointing back to a fetched source URL and an excerpt present in the fetched page text.
+`OPENCLAW_ENABLED=false` is the safe default. When enabled together with `ALBERTO_BRIDGE_TOKEN`, controller resolution creates a restricted, queued interpretation task. The Privacy Agent never calls the OpenClaw Gateway, never stores its token, and never gives Alberto database or Gmail access. Alberto can only claim a task and return a structured result through two local bridge endpoints. See [the NUC integration guide](docs/ALBERTO_INTEGRATION.md).
 
 ## GDPR request workflow
 

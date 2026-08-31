@@ -13,12 +13,9 @@ class Settings(BaseSettings):
     gmail_discovery_max_results_per_query: int = 50
     controller_resolver_max_pages: int = 20
     openclaw_enabled: bool = False
-    openclaw_base_url: str = ""
-    openclaw_token: str = ""
     openclaw_model: str = ""
-    openclaw_invoke_command: str = "openclaw.invoke"
-    openclaw_timeout_seconds: int = 30
     openclaw_max_input_chars: int = 12000
+    alberto_bridge_token: str = ""
     privacy_user_full_name: str = ""
     privacy_user_preferred_email: str = ""
     privacy_user_optional_phone: str = ""

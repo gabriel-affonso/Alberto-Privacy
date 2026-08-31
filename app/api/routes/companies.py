@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.controller_resolver.openclaw import OpenClawControllerTextInterpreter
 from app.controller_resolver.resolver import ControllerResolver
 from app.controller_resolver.service import resolve_controller_for_company
 from app.core.config import Settings, get_settings
@@ -19,7 +18,6 @@ router = APIRouter(prefix="/companies", tags=["companies"])
 
 def get_controller_resolver(settings: Settings = Depends(get_settings)) -> ControllerResolver:
     return ControllerResolver(
-        interpreter=OpenClawControllerTextInterpreter(settings),
         max_pages=settings.controller_resolver_max_pages,
     )
 
@@ -49,12 +47,13 @@ def resolve_company_controller(
     company_id: int,
     db: Session = Depends(get_db),
     resolver: ControllerResolver = Depends(get_controller_resolver),
+    settings: Settings = Depends(get_settings),
 ) -> ControllerResolutionRead:
     company = company_crud.get_company(db, company_id)
     if company is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
     try:
-        return resolve_controller_for_company(db, company, resolver)
+        return resolve_controller_for_company(db, company, resolver, settings)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
 
@@ -73,10 +72,10 @@ def get_company_controller(company_id: int, db: Session = Depends(get_db)) -> Co
 
 @router.post("/resolve-pending", response_model=list[ControllerResolutionRead])
 def resolve_pending_controllers(
-    limit: int = 10, db: Session = Depends(get_db), resolver: ControllerResolver = Depends(get_controller_resolver)
+    limit: int = 10, db: Session = Depends(get_db), resolver: ControllerResolver = Depends(get_controller_resolver), settings: Settings = Depends(get_settings)
 ) -> list[ControllerResolutionResult]:
     companies = list(db.scalars(select(Company).where(Company.last_resolved_at.is_(None)).limit(max(1, min(limit, 100)))).all())
-    return [resolve_controller_for_company(db, company, resolver) for company in companies if company.domain or company.website]
+    return [resolve_controller_for_company(db, company, resolver, settings) for company in companies if company.domain or company.website]
 
 
 @router.patch("/{company_id}", response_model=CompanyRead)

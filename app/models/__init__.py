@@ -1,4 +1,5 @@
 from app.models.account import Account
+from app.models.alberto_job import AlbertoJob
 from app.models.communication import Communication
 from app.models.company import Company
 from app.models.controller_resolution import ControllerResolution
@@ -14,6 +15,7 @@ from app.models.response_data import (
 
 __all__ = [
     "Account",
+    "AlbertoJob",
     "Communication",
     "Company",
     "ControllerResolution",
