@@ -1,0 +1,2 @@
+"""Gmail-based service discovery."""
+
