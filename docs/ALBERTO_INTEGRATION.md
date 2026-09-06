@@ -104,6 +104,17 @@ Post the same body to the `complete` endpoint.
 
 ## Alberto operating instruction
 
+Install the versioned skill from this repository into Alberto's OpenClaw workspace:
+
+```bash
+sudo install -d -o alberto -g alberto /home/alberto/.openclaw/workspace/skills/privacy-agent-bridge
+sudo install -o alberto -g alberto -m 644 openclaw/skills/privacy-agent-bridge/SKILL.md /home/alberto/.openclaw/workspace/skills/privacy-agent-bridge/SKILL.md
+```
+
+It is important that the completion request sends a JSON body with a top-level
+`result` object, even when no evidence was found. Sending `{"evidence":[]}`
+directly is invalid.
+
 Add this instruction to Alberto's privacy-agent workflow or skill:
 
 > For a Privacy Agent task, claim one job using the local bridge. Interpret only the supplied page text. Do not browse, call the Privacy Agent's other endpoints, access Gmail, send communications, or use the OpenClaw Gateway token. Return a value only if a supplied excerpt proves it; otherwise leave it empty. Submit the structured result to the same bridge.
