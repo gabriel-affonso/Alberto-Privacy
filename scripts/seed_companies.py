@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+from argparse import ArgumentParser
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
@@ -46,7 +47,22 @@ def api(method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
         return json.load(response)
 
 
+def parse_args() -> set[str]:
+    parser = ArgumentParser(
+        description="Seed obvious privacy-target companies and resolve controller data."
+    )
+    parser.add_argument(
+        "--skip-domain",
+        action="append",
+        default=[],
+        help="Domain to skip. May be passed more than once.",
+    )
+    args = parser.parse_args()
+    return {domain.lower() for domain in args.skip_domain}
+
+
 def main() -> None:
+    skipped_domains = parse_args()
     settings = get_settings()
     if not settings.openclaw_enabled or not settings.alberto_bridge_token:
         raise SystemExit(
@@ -66,6 +82,10 @@ def main() -> None:
         offset += len(batch)
 
     for name, domain in DEFAULT_COMPANIES:
+        if domain in skipped_domains:
+            print(f"{name}: skipped.")
+            continue
+
         try:
             company = existing.get(domain)
             if company is None:
