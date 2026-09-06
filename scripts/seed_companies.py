@@ -35,7 +35,10 @@ def api(method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
     settings = get_settings()
     data = json.dumps(payload).encode() if payload is not None else None
     request = Request(
-        "http://127.0.0.1:8000" + path,
+        # The script runs inside the privacy-api container.  "localhost" would
+        # point back to that container, while the Compose service name reaches
+        # the API through Docker's internal network.
+        "http://privacy-api:8000" + path,
         data=data,
         method=method,
         headers={
