@@ -1,6 +1,6 @@
 """Load manually verified privacy/contact overrides.
 
-The catalog is evidence for controller resolution only. It never authorizes or sends a
+The catalogs are evidence for controller resolution only. They never authorize or send a
 GDPR request; the normal DRAFT -> APPROVED -> send/portal workflow remains unchanged.
 """
 
@@ -16,28 +16,60 @@ from app.controller_resolver.types import ControllerResolutionResult, EvidenceIt
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_VERIFIED_CONTACTS_PATH = PROJECT_ROOT / "data" / "verified_privacy_contacts.json"
+SUPPLEMENTAL_VERIFIED_CONTACTS_PATHS = (
+    PROJECT_ROOT / "data" / "verified_privacy_contacts_confirmed.json",
+)
 ALLOWED_METHODS = {"email", "form", "portal"}
+
+# A few discovered sender domains are transport/subdomain aliases of services already
+# represented in the original verified catalog. Keep this deliberately small and auditable.
+VERIFIED_DOMAIN_ALIASES = {
+    "fs.flixbus.com": "flixbus.pt",
+    "flixbus.com": "flixbus.pt",
+}
+
+
+def _lookup_paths(path: Path) -> tuple[Path, ...]:
+    if path == DEFAULT_VERIFIED_CONTACTS_PATH:
+        return (DEFAULT_VERIFIED_CONTACTS_PATH, *SUPPLEMENTAL_VERIFIED_CONTACTS_PATHS)
+    return (path,)
+
+
+def _record_domains(record: dict[str, Any]) -> set[str]:
+    values = [record.get("domain"), *(record.get("aliases") or [])]
+    return {
+        normalize_domain(str(value))
+        for value in values
+        if value and str(value).strip()
+    }
 
 
 def verified_contact_for_domain(
     domain: str, path: Path = DEFAULT_VERIFIED_CONTACTS_PATH
 ) -> dict[str, Any] | None:
-    """Return a verified contact record for *domain*, if one exists."""
-    if not path.exists():
-        return None
+    """Return a verified contact record for *domain*, if one exists.
 
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    contacts = payload.get("contacts")
-    if not isinstance(contacts, list):
-        raise ValueError(f"{path} does not contain a contacts list")
-
+    The default lookup searches both the original P1 catalog and supplemental verified
+    contacts gathered later from confirmed Gmail evidence. A custom path remains isolated
+    for tests and maintenance tasks.
+    """
     normalized = normalize_domain(domain)
-    for record in contacts:
-        if not isinstance(record, dict):
+    normalized = VERIFIED_DOMAIN_ALIASES.get(normalized, normalized)
+
+    for candidate_path in _lookup_paths(path):
+        if not candidate_path.exists():
             continue
-        record_domain = str(record.get("domain") or "")
-        if record_domain and normalize_domain(record_domain) == normalized:
-            return record
+
+        payload = json.loads(candidate_path.read_text(encoding="utf-8"))
+        contacts = payload.get("contacts")
+        if not isinstance(contacts, list):
+            raise ValueError(f"{candidate_path} does not contain a contacts list")
+
+        for record in contacts:
+            if not isinstance(record, dict):
+                continue
+            if normalized in _record_domains(record):
+                return record
     return None
 
 
