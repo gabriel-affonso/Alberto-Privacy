@@ -50,6 +50,7 @@ PROCESSOR_DOMAINS = {
     "docusign.net": "DocuSign",
     "greenhouse.io": "Greenhouse",
     "lever.co": "Lever",
+    "dryfta.net": "Dryfta",
 }
 
 PERSONAL_MAIL_DOMAINS = {
@@ -64,11 +65,7 @@ PERSONAL_MAIL_DOMAINS = {
     "protonmail.com",
 }
 
-NEWSLETTER_DOMAINS = {
-    "morningbrew.com",
-    "substack.com",
-    "paragraph.xyz",
-}
+NEWSLETTER_DOMAINS = {"morningbrew.com", "substack.com", "paragraph.xyz"}
 
 SERVICE_NAME_TERMS = {
     "support",
@@ -120,7 +117,7 @@ AUTOMATED_LOCALPART_TERMS = {
 STRONG_ACCOUNT_PATTERNS = (
     r"password reset",
     r"reset (?:your|the) password",
-    r"verify your (?:email|account)",
+    r"verify your (?:email|account|legal information)",
     r"verification code",
     r"security code",
     r"confirm your (?:email|account|payment)",
@@ -132,7 +129,6 @@ STRONG_ACCOUNT_PATTERNS = (
     r"registration",
     r"registered",
     r"api key",
-    r"order",
     r"payment",
     r"receipt",
     r"invoice",
@@ -140,12 +136,20 @@ STRONG_ACCOUNT_PATTERNS = (
     r"subscription",
     r"booking",
     r"purchase",
-    r"welcome to",
     r"application received",
     r"online application",
     r"thanks for applying",
     r"proof of (?:payment|email)",
     r"recovery options",
+    r"re-pairing",
+    r"device pairing",
+)
+
+ORDER_ACCOUNT_PATTERNS = (
+    r"\byour\b.*\border\b",
+    r"\border\s*(?:#|no\.?|number|[-:])",
+    r"\border\s+(?:confirmed|confirmation|delivered|shipped|refunded|cancelled|canceled)",
+    r"\border\b.*\b(?:thank you|delivered|shipped|refunded|tracking|package)\b",
 )
 
 TRANSACTIONAL_PATTERNS = (
@@ -173,6 +177,7 @@ WEAK_CONTENT_PATTERNS = (
 )
 
 PLATFORM_APPLY_RE = re.compile(r"thanks for applying to\s+(.+?)(?:[!|]|$)", re.I)
+PLATFORM_PASSWORD_RE = re.compile(r"reset (?:your|the) password for\s+(.+?)(?:[!|]|$)", re.I)
 
 
 @dataclass(frozen=True)
@@ -233,16 +238,24 @@ def _processor_name(raw_domain: str, canonical_domain: str) -> str | None:
     return None
 
 
-def _likely_controller_from_platform(
-    raw_domain: str, company_name: str, sender_email: str, subject: str
-) -> str | None:
-    match = PLATFORM_APPLY_RE.search(subject)
-    if match:
-        value = match.group(1).strip(" .-|")
-        if value:
-            return value[:255]
+def _likely_controller_from_platform(company_name: str, subject: str) -> str | None:
+    for pattern in (PLATFORM_APPLY_RE, PLATFORM_PASSWORD_RE):
+        match = pattern.search(subject)
+        if match:
+            value = match.group(1).strip(" .-|")
+            if value:
+                return value[:255]
 
-    generic = {"icims", "workday", "myworkday", "workable", "docusign", "greenhouse", "lever"}
+    generic = {
+        "icims",
+        "workday",
+        "myworkday",
+        "workable",
+        "docusign",
+        "greenhouse",
+        "lever",
+        "dryfta",
+    }
     cleaned = company_name.strip()
     if cleaned and cleaned.lower() not in generic and " via docusign" not in cleaned.lower():
         return cleaned[:255]
@@ -293,13 +306,15 @@ def classify_discovery(
         )
 
     processor = _processor_name(raw, canonical)
-    strong = _matches_any(lower, STRONG_ACCOUNT_PATTERNS)
+    strong = _matches_any(lower, STRONG_ACCOUNT_PATTERNS) or _matches_any(lower, ORDER_ACCOUNT_PATTERNS)
+    if catalog_match and re.search(r"\bwelcome to\b", lower):
+        strong = True
     transactional = _matches_any(lower, TRANSACTIONAL_PATTERNS)
     weak_content = _matches_any(lower, WEAK_CONTENT_PATTERNS)
     newsletter_domain = raw in NEWSLETTER_DOMAINS or any(raw.endswith("." + d) for d in NEWSLETTER_DOMAINS)
 
     if processor:
-        likely = _likely_controller_from_platform(raw, company_name, sender_email, text)
+        likely = _likely_controller_from_platform(company_name, text)
         classification = PROBABLE if strong or transactional else WEAK
         confidence = max(base_confidence, 0.72 if classification == PROBABLE else 0.48)
         return DiscoveryClassification(
@@ -369,7 +384,6 @@ def classify_discovery(
         classification = WEAK
         reason = "single/ambiguous Gmail evidence"
 
-    dsar_eligible = classification == CONFIRMED
     return DiscoveryClassification(
         raw_domain=raw,
         canonical_domain=canonical,
@@ -378,6 +392,6 @@ def classify_discovery(
         relationship="direct-service",
         likely_controller=None,
         requires_controller_review=False,
-        dsar_eligible=dsar_eligible,
+        dsar_eligible=classification == CONFIRMED,
         reason=reason,
     )

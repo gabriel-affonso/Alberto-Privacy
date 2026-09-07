@@ -38,6 +38,35 @@ def test_password_reset_or_order_is_strong_account_evidence() -> None:
     assert order.canonical_domain == "temu.com"
 
 
+def test_discount_mention_does_not_prove_an_order() -> None:
+    result = classify(
+        "fdcm.eu",
+        "Re: First order discount for 20 kg Soy Protein Isolate",
+        company_name="Ecommerce Contact",
+        messages=3,
+    )
+
+    assert result.classification == PROBABLE
+    assert result.dsar_eligible is False
+
+
+def test_catalog_welcome_is_strong_but_generic_welcome_is_not() -> None:
+    amazon = classify("amazon.es", "Welcome to Prime", company_name="Amazon Prime")
+    generic = classify("summerstaherrgard.se", "Welcome to Summersta Herrgard!", company_name="Summersta Herrgard")
+
+    assert amazon.classification == CONFIRMED
+    assert amazon.dsar_eligible is True
+    assert generic.classification == WEAK
+    assert generic.dsar_eligible is False
+
+
+def test_device_repairing_is_strong_account_evidence() -> None:
+    result = classify("n26.com", "Please confirm your re-pairing", company_name="N26", messages=3)
+
+    assert result.classification == CONFIRMED
+    assert result.dsar_eligible is True
+
+
 def test_personal_mailbox_is_ignored() -> None:
     result = classify("gmail.com", "Re: project notes", company_name="A Person", messages=10)
 
@@ -89,5 +118,19 @@ def test_processor_mediated_recruiting_needs_controller_review() -> None:
     assert result.canonical_domain == "workable.com"
     assert result.relationship == "processor-mediated"
     assert result.likely_controller == "Q ENERGY"
+    assert result.requires_controller_review is True
+    assert result.dsar_eligible is False
+
+
+def test_dryfta_event_account_is_processor_mediated() -> None:
+    result = classify(
+        "dryfta.net",
+        "Reset your password for MSA Prague 2025",
+        company_name="MSAPrague2025",
+    )
+
+    assert result.classification == PROBABLE
+    assert result.relationship == "processor-mediated"
+    assert result.likely_controller == "MSA Prague 2025"
     assert result.requires_controller_review is True
     assert result.dsar_eligible is False
