@@ -70,7 +70,6 @@ def verified_resolution_for_domain(
         raise ValueError(f"Verified contact for {domain} has no official HTTPS source")
 
     evidence: list[EvidenceItem] = []
-    source = sources[0]
     fields = {
         "controller_name": str(record.get("controller_name") or ""),
         "controller_country": str(record.get("controller_country") or ""),
@@ -82,7 +81,14 @@ def verified_resolution_for_domain(
     for field, value in fields.items():
         if not value:
             continue
-        field_source = request_url if field == "privacy_request_url" and request_url else source
+        if field == "privacy_request_url" and request_url:
+            field_source = request_url
+        elif field == "dpo_contact":
+            # Some companies publish the rights mailbox on a secondary official
+            # privacy page/PDF, which is stored last in official_sources.
+            field_source = sources[-1]
+        else:
+            field_source = sources[0]
         evidence.append(
             EvidenceItem(
                 field=field,
