@@ -76,3 +76,34 @@ def test_confirmed_direct_gmail_discovery_can_generate_draft(db_session, tmp_pat
     )
 
     assert request.status == "DRAFT"
+
+
+def test_special_framework_cannot_use_standard_article_15_template(db_session, tmp_path) -> None:
+    company = Company(
+        name="Authentication Service",
+        domain="nomail.ec.europa.eu",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        discovery_classification="CONFIRMED",
+        discovery_dsar_eligible=True,
+        discovery_requires_controller_review=False,
+    )
+    db_session.add(company)
+    db_session.flush()
+    account = Account(
+        company_id=company.id,
+        label="EU Login",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        account_identifier="notice@ec.europa.eu",
+    )
+    db_session.add(account)
+    db_session.commit()
+
+    with pytest.raises(ValueError, match="Regulation \\(EU\\) 2018/1725"):
+        generate_request(
+            db_session,
+            company,
+            _settings(tmp_path),
+            "article_15_access",
+            account.id,
+            False,
+        )
