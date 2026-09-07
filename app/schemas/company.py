@@ -30,6 +30,14 @@ class CompanyRead(CompanyBase):
     discovery_first_seen_at: datetime | None = None
     discovery_last_seen_at: datetime | None = None
     discovery_message_count: int
+    discovery_raw_domain: str | None = None
+    discovery_canonical_domain: str | None = None
+    discovery_classification: str | None = None
+    discovery_relationship: str | None = None
+    discovery_likely_controller: str | None = None
+    discovery_requires_controller_review: bool = False
+    discovery_dsar_eligible: bool = False
+    discovery_classification_reason: str | None = None
     controller_name: str | None = None
     controller_country: str | None = None
     controller_address: str | None = None
