@@ -1,8 +1,8 @@
 """Deterministic classification for Gmail discovery evidence.
 
 This module deliberately separates "we saw mail from this service" from "this is a
-safe DSAR target".  It uses sender/domain canonicalization plus conservative subject
-semantics.  It never sends, approves, or generates a privacy request.
+safe DSAR target". It uses sender/domain canonicalization plus conservative subject
+semantics. It never sends, approves, or generates a privacy request.
 """
 
 from __future__ import annotations
@@ -22,8 +22,6 @@ WEAK = "WEAK"
 IGNORE = "IGNORE"
 CLASSIFICATIONS = {CONFIRMED, PROBABLE, WEAK, IGNORE}
 
-# Cross-country/marketing domains that are the same service/controller candidate in
-# Alberto's catalog.  Subdomains of a catalog domain are handled automatically below.
 DOMAIN_ALIASES = {
     "amazon.es": "amazon.com",
     "amazon.co.uk": "amazon.com",
@@ -32,6 +30,7 @@ DOMAIN_ALIASES = {
     "amazon.it": "amazon.com",
     "amazon.nl": "amazon.com",
     "sheinnotice.com": "shein.com",
+    "updates.activision.com": "activision.com",
     "mail.nintendo-europe.com": "nintendo.com",
     "nintendo-europe.com": "nintendo.com",
     "workablemail.com": "workable.com",
@@ -40,9 +39,6 @@ DOMAIN_ALIASES = {
     "docusign.net": "docusign.com",
 }
 
-# These are commonly processors/recruiting/signature platforms.  Evidence from them
-# may prove a relationship, but usually does not prove that the platform itself is the
-# correct controller for an Article 15 request about the underlying employer/client.
 PROCESSOR_DOMAINS = {
     "workday.com": "Workday",
     "myworkday.com": "Workday",
@@ -73,6 +69,53 @@ NEWSLETTER_DOMAINS = {
     "paragraph.xyz",
 }
 
+SERVICE_NAME_TERMS = {
+    "support",
+    "team",
+    "company",
+    "corporation",
+    "association",
+    "university",
+    "institute",
+    "books",
+    "bank",
+    "airlines",
+    "store",
+    "shop",
+    "newsletter",
+    "security",
+    "accounts",
+    "recruiting",
+    "recruitment",
+}
+
+AUTOMATED_LOCALPART_TERMS = {
+    "noreply",
+    "no-reply",
+    "donotreply",
+    "support",
+    "info",
+    "contact",
+    "hello",
+    "newsletter",
+    "notify",
+    "notification",
+    "security",
+    "account",
+    "team",
+    "orders",
+    "mail",
+    "service",
+    "customer",
+    "verify",
+    "updates",
+    "billing",
+    "payment",
+    "recruitment",
+    "recruiting",
+    "jobs",
+}
+
 STRONG_ACCOUNT_PATTERNS = (
     r"password reset",
     r"reset (?:your|the) password",
@@ -101,6 +144,7 @@ STRONG_ACCOUNT_PATTERNS = (
     r"online application",
     r"thanks for applying",
     r"proof of (?:payment|email)",
+    r"recovery options",
 )
 
 TRANSACTIONAL_PATTERNS = (
@@ -166,13 +210,10 @@ def canonicalize_discovery_domain(domain: str) -> str:
     if raw in DOMAIN_ALIASES:
         return DOMAIN_ALIASES[raw]
 
-    # Prefer the longest catalog match so a specialized candidate is not swallowed by
-    # a shorter parent domain.
     matches = [d for d in candidate_domains() if raw == d or raw.endswith("." + d)]
     if matches:
         return max(matches, key=len)
 
-    # Some provider aliases may arrive on arbitrary subdomains.
     for alias, canonical in DOMAIN_ALIASES.items():
         if raw.endswith("." + alias):
             return canonical
@@ -200,16 +241,26 @@ def _likely_controller_from_platform(
         if value:
             return value[:255]
 
-    # iCIMS messages often carry the employer as display name.  Do not use generic
-    # platform names as a controller guess.
     generic = {"icims", "workday", "myworkday", "workable", "docusign", "greenhouse", "lever"}
     cleaned = company_name.strip()
     if cleaned and cleaned.lower() not in generic and " via docusign" not in cleaned.lower():
         return cleaned[:255]
-
-    # Keep the raw evidence available for manual review instead of inventing an
-    # employer from opaque local-parts such as hanwhas@myworkday.com.
     return None
+
+
+def _looks_like_person_sender(company_name: str, sender_email: str, catalog_match: bool) -> bool:
+    if catalog_match:
+        return False
+    words = [w for w in re.split(r"\s+", company_name.strip()) if w]
+    if len(words) < 2 or len(words) > 5:
+        return False
+    lower_words = {re.sub(r"[^a-z]", "", w.lower()) for w in words}
+    if lower_words & SERVICE_NAME_TERMS:
+        return False
+    localpart = sender_email.split("@", 1)[0].lower() if "@" in sender_email else ""
+    if any(term in localpart for term in AUTOMATED_LOCALPART_TERMS):
+        return False
+    return all(any(ch.isalpha() for ch in word) for word in words)
 
 
 def classify_discovery(
@@ -225,6 +276,7 @@ def classify_discovery(
     canonical = canonicalize_discovery_domain(raw)
     text = (subject or "").strip()
     lower = text.lower()
+    catalog_match = canonical in candidate_domains()
 
     if raw in PERSONAL_MAIL_DOMAINS:
         return DiscoveryClassification(
@@ -243,7 +295,6 @@ def classify_discovery(
     strong = _matches_any(lower, STRONG_ACCOUNT_PATTERNS)
     transactional = _matches_any(lower, TRANSACTIONAL_PATTERNS)
     weak_content = _matches_any(lower, WEAK_CONTENT_PATTERNS)
-    catalog_match = canonical in candidate_domains()
     newsletter_domain = raw in NEWSLETTER_DOMAINS or any(raw.endswith("." + d) for d in NEWSLETTER_DOMAINS)
 
     if processor:
@@ -275,7 +326,24 @@ def classify_discovery(
             reason="newsletter/marketing sender without account evidence",
         )
 
-    if strong:
+    if _looks_like_person_sender(company_name, sender_email, catalog_match):
+        return DiscoveryClassification(
+            raw_domain=raw,
+            canonical_domain=canonical,
+            classification=IGNORE,
+            confidence_score=min(base_confidence, 0.35),
+            relationship="personal-or-institutional-correspondence",
+            likely_controller=None,
+            requires_controller_review=False,
+            dsar_eligible=False,
+            reason="sender appears to be an individual rather than an automated service",
+        )
+
+    if strong and weak_content:
+        confidence = max(base_confidence, 0.72)
+        classification = PROBABLE
+        reason = "mixed account and newsletter/informational subject signals"
+    elif strong:
         confidence = max(base_confidence, 0.88 if catalog_match else 0.82)
         classification = CONFIRMED
         reason = "strong account/transaction subject evidence"
