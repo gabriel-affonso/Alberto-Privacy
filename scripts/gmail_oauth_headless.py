@@ -13,6 +13,7 @@ No email is read or sent by this script.
 
 from __future__ import annotations
 
+import os
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
@@ -82,7 +83,20 @@ def main() -> None:
     if "code=" not in redirected_url or "state=" not in redirected_url:
         raise SystemExit("The pasted URL does not contain both OAuth code and state parameters")
 
-    flow.fetch_token(authorization_response=redirected_url)
+    # oauthlib rejects plain HTTP by default. Google's installed-app OAuth flow
+    # explicitly permits loopback redirects such as http://localhost:<port>/.
+    # Enable the exception only for this validated loopback token exchange and
+    # restore the process environment immediately afterwards.
+    previous_insecure_transport = os.environ.get("OAUTHLIB_INSECURE_TRANSPORT")
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+    try:
+        flow.fetch_token(authorization_response=redirected_url)
+    finally:
+        if previous_insecure_transport is None:
+            os.environ.pop("OAUTHLIB_INSECURE_TRANSPORT", None)
+        else:
+            os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = previous_insecure_transport
+
     credentials = flow.credentials
 
     token_file.parent.mkdir(parents=True, exist_ok=True)
