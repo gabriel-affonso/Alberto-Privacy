@@ -29,6 +29,7 @@ DOMAIN_ALIASES = {
     "amazon.fr": "amazon.com",
     "amazon.it": "amazon.com",
     "amazon.nl": "amazon.com",
+    "email.apple.com": "apple.com",
     "sheinnotice.com": "shein.com",
     "updates.activision.com": "activision.com",
     "mail.nintendo-europe.com": "nintendo.com",
