@@ -6,6 +6,7 @@ from hashlib import sha256
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.controller_resolver.verified_contacts import verified_contact_for_domain
 from app.core.config import Settings
 from app.gmail_discovery.classification import CONFIRMED
 from app.gmail_discovery.constants import GMAIL_DISCOVERY_SOURCE
@@ -36,10 +37,14 @@ def generate_request(
 ) -> GdprRequest:
     if not settings.privacy_user_full_name or not settings.privacy_user_preferred_email:
         raise ValueError("Set PRIVACY_USER_FULL_NAME and PRIVACY_USER_PREFERRED_EMAIL before generating a request")
+    _assert_standard_article_15_framework(company, request_type)
     account = db.get(Account, account_id) if account_id else None
     if account_id and (account is None or account.company_id != company.id):
         raise ValueError("Account does not belong to this company")
-    if account and account.discovery_source == GMAIL_DISCOVERY_SOURCE:
+    gmail_derived = company.discovery_source == GMAIL_DISCOVERY_SOURCE or (
+        account is not None and account.discovery_source == GMAIL_DISCOVERY_SOURCE
+    )
+    if gmail_derived:
         if company.discovery_classification != CONFIRMED or not company.discovery_dsar_eligible:
             raise ValueError(
                 "Gmail-discovered evidence is not a confirmed DSAR target; review the discovery classification/controller first"
@@ -69,6 +74,18 @@ def generate_request(
     db.commit()
     db.refresh(request)
     return request
+
+
+def _assert_standard_article_15_framework(company: Company, request_type: str) -> None:
+    if request_type != "article_15_access" or not company.domain:
+        return
+    record = verified_contact_for_domain(company.domain)
+    if record is None or record.get("standard_gdpr_article_15_template", True) is not False:
+        return
+    framework = str(record.get("legal_framework") or "a controller-specific legal framework")
+    raise ValueError(
+        f"{company.name} is not a standard GDPR Article 15 template target; use {framework} instead"
+    )
 
 
 def update_draft(db: Session, request: GdprRequest, values: dict[str, object]) -> GdprRequest:
