@@ -2,6 +2,8 @@ from sqlalchemy import select
 import pytest
 
 from app.core.config import Settings
+from app.gmail_discovery.constants import GMAIL_DISCOVERY_SOURCE
+from app.models.account import Account
 from app.models.company import Company
 from app.models.gdpr_request import GdprRequest
 from scripts.draft_requests import generate_missing, review, perform_action
@@ -23,6 +25,73 @@ def test_batch_preserves_existing_and_never_approves(db_session, capsys):
     output = capsys.readouterr().out
     assert "User edited this draft" in output
     assert "falta destinatario" in output
+
+
+def test_confirmed_only_batch_skips_probable_and_special_framework(db_session, capsys):
+    confirmed = Company(
+        name="Confirmed",
+        domain="example.com",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        discovery_classification="CONFIRMED",
+        discovery_dsar_eligible=True,
+    )
+    probable = Company(
+        name="Probable",
+        domain="probable.example",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        discovery_classification="PROBABLE",
+        discovery_dsar_eligible=False,
+    )
+    eu_login = Company(
+        name="Authentication Service",
+        domain="nomail.ec.europa.eu",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        discovery_classification="CONFIRMED",
+        discovery_dsar_eligible=True,
+    )
+    db_session.add_all([confirmed, probable, eu_login])
+    db_session.flush()
+    db_session.add_all([
+        Account(
+            company_id=confirmed.id,
+            label="Confirmed",
+            discovery_source=GMAIL_DISCOVERY_SOURCE,
+            account_identifier="account@example.com",
+        ),
+        Account(
+            company_id=probable.id,
+            label="Probable",
+            discovery_source=GMAIL_DISCOVERY_SOURCE,
+            account_identifier="account@probable.example",
+        ),
+        Account(
+            company_id=eu_login.id,
+            label="EU Login",
+            discovery_source=GMAIL_DISCOVERY_SOURCE,
+            account_identifier="notice@ec.europa.eu",
+        ),
+    ])
+    db_session.commit()
+
+    settings = Settings(
+        privacy_user_full_name="Test User",
+        privacy_user_preferred_email="test@example.test",
+    )
+    created, preserved, skipped = generate_missing(
+        db_session,
+        settings,
+        confirmed_only=True,
+    )
+
+    requests = db_session.scalars(select(GdprRequest)).all()
+    assert created == 1
+    assert preserved == 0
+    assert skipped == 2
+    assert len(requests) == 1
+    assert requests[0].company_id == confirmed.id
+    assert requests[0].account_id is not None
+    output = capsys.readouterr().out
+    assert "Regulation (EU) 2018/1725" in output
 
 
 def test_send_requires_approval_and_gmail_token(db_session, tmp_path, monkeypatch):
