@@ -25,6 +25,7 @@ def test_known_subdomains_and_country_domains_are_canonicalized() -> None:
     assert canonicalize_discovery_domain("email.apple.com") == "apple.com"
     assert canonicalize_discovery_domain("verify.orcid.org") == "orcid.org"
     assert canonicalize_discovery_domain("amazon.es") == "amazon.com"
+    assert canonicalize_discovery_domain("updates.activision.com") == "activision.com"
 
 
 def test_password_reset_or_order_is_strong_account_evidence() -> None:
@@ -44,10 +45,36 @@ def test_personal_mailbox_is_ignored() -> None:
     assert result.dsar_eligible is False
 
 
+def test_person_like_sender_on_unknown_institution_is_not_a_dsar_target() -> None:
+    result = classify_discovery(
+        domain="department.example.edu",
+        company_name="Ada Example",
+        sender_email="ada.example@department.example.edu",
+        subject="Reset Password",
+        message_count=2,
+        base_confidence=0.61,
+    )
+
+    assert result.classification == IGNORE
+    assert result.dsar_eligible is False
+
+
 def test_newsletter_without_account_signal_is_weak_even_with_many_messages() -> None:
     result = classify("morningbrew.com", "Unstable outlook", messages=9)
 
     assert result.classification == WEAK
+    assert result.dsar_eligible is False
+
+
+def test_mixed_registration_and_call_for_proposals_is_probable_not_confirmed() -> None:
+    result = classify(
+        "methodsnet.org",
+        "Weekly Digest: Summer School Registration & Conference Call for Proposals",
+        company_name="MethodsNET",
+        messages=9,
+    )
+
+    assert result.classification == PROBABLE
     assert result.dsar_eligible is False
 
 
