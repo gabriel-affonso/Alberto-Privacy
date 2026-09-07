@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.gmail_discovery.classification import IGNORE
@@ -101,7 +101,9 @@ def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Co
 def list_gmail_discovery_results(db: Session, include_ignored: bool = False) -> list[Company]:
     query = select(Company).where(Company.discovery_source == GMAIL_DISCOVERY_SOURCE)
     if not include_ignored:
-        query = query.where(Company.discovery_classification != IGNORE)
+        query = query.where(
+            or_(Company.discovery_classification.is_(None), Company.discovery_classification != IGNORE)
+        )
     return list(
         db.scalars(
             query.order_by(
