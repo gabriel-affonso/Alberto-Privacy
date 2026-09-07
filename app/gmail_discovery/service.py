@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.gmail_discovery.classification import IGNORE
 from app.gmail_discovery.constants import DEFAULT_DISCOVERY_QUERIES, GMAIL_DISCOVERY_SOURCE
 from app.gmail_discovery.parser import aggregate_discovered_services
 from app.gmail_discovery.types import DiscoveredService, GmailClient, GmailMessageMetadata
@@ -44,8 +45,14 @@ def discover_from_gmail(
     return services
 
 
-def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Company, Account]:
+def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Company, Account] | None:
     company = db.scalar(select(Company).where(Company.domain == service.domain))
+
+    # Personal correspondence should not pollute the controller/company table. Existing
+    # rows can still be classified IGNORE by the reclassification maintenance script.
+    if company is None and service.classification == IGNORE:
+        return None
+
     if company is None:
         company = Company(
             name=service.company_name,
@@ -60,6 +67,14 @@ def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Co
     company.discovery_first_seen_at = service.first_seen_at
     company.discovery_last_seen_at = service.last_seen_at
     company.discovery_message_count = service.message_count
+    company.discovery_raw_domain = service.raw_domain or service.domain
+    company.discovery_canonical_domain = service.domain
+    company.discovery_classification = service.classification
+    company.discovery_relationship = service.relationship
+    company.discovery_likely_controller = service.likely_controller
+    company.discovery_requires_controller_review = service.requires_controller_review
+    company.discovery_dsar_eligible = service.dsar_eligible
+    company.discovery_classification_reason = service.classification_reason
 
     account = db.scalar(
         select(Account).where(
@@ -83,11 +98,16 @@ def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Co
     return company, account
 
 
-def list_gmail_discovery_results(db: Session) -> list[Company]:
+def list_gmail_discovery_results(db: Session, include_ignored: bool = False) -> list[Company]:
+    query = select(Company).where(Company.discovery_source == GMAIL_DISCOVERY_SOURCE)
+    if not include_ignored:
+        query = query.where(Company.discovery_classification != IGNORE)
     return list(
         db.scalars(
-            select(Company)
-            .where(Company.discovery_source == GMAIL_DISCOVERY_SOURCE)
-            .order_by(Company.discovery_confidence_score.desc(), Company.domain)
+            query.order_by(
+                Company.discovery_dsar_eligible.desc(),
+                Company.discovery_confidence_score.desc(),
+                Company.domain,
+            )
         ).all()
     )
