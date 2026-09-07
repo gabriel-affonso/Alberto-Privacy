@@ -1,4 +1,10 @@
-"""Generate access-request drafts once per company, or review existing requests."""
+"""Generate access-request drafts once per company, or review existing requests.
+
+The CLI's ``generate`` action is conservative by default: it creates drafts only for
+Gmail-discovered companies classified CONFIRMED, marked DSAR-eligible, not awaiting
+controller review, and compatible with the standard GDPR Article 15 template.
+Use ``--all-companies`` only for deliberate legacy/manual batch generation.
+"""
 
 import argparse
 import json
@@ -11,26 +17,81 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sqlalchemy import select
 from app import models  # noqa: F401
+from app.controller_resolver.verified_contacts import verified_contact_for_domain
 from app.core.config import get_settings
 from app.db.session import SessionLocal
+from app.gmail_discovery.classification import CONFIRMED
+from app.gmail_discovery.constants import GMAIL_DISCOVERY_SOURCE
 from app.gdpr_request_generator.service import generate_request
+from app.models.account import Account
 from app.models.company import Company
 from app.models.gdpr_request import GdprRequest
 
 
-def generate_missing(db, settings):
+def generate_missing(db, settings, confirmed_only=False):
     if not settings.privacy_user_full_name or not settings.privacy_user_preferred_email:
         raise ValueError("Configure PRIVACY_USER_FULL_NAME e PRIVACY_USER_PREFERRED_EMAIL.")
+
+    created = preserved = skipped = 0
     for company in db.scalars(select(Company).order_by(Company.id)).all():
+        account = None
+        if confirmed_only:
+            reason = _confirmed_draft_skip_reason(company)
+            if reason:
+                print(f"{company.name}: ignorado ({reason}).")
+                skipped += 1
+                continue
+            account = db.scalars(
+                select(Account).where(
+                    Account.company_id == company.id,
+                    Account.discovery_source == GMAIL_DISCOVERY_SOURCE,
+                ).order_by(Account.id)
+            ).first()
+            if account is None:
+                print(f"{company.name}: ignorado (sem evidencia Gmail vinculada).")
+                skipped += 1
+                continue
+
         existing = db.scalar(select(GdprRequest.id).where(
             GdprRequest.company_id == company.id,
             GdprRequest.request_type == "article_15_access",
         ).limit(1))
         if existing is not None:
             print(f"{company.name}: pedido existente #{existing}; preservado.")
+            preserved += 1
             continue
-        request = generate_request(db, company, settings, "article_15_access", None, True)
+
+        request = generate_request(
+            db,
+            company,
+            settings,
+            "article_15_access",
+            account.id if account else None,
+            True,
+        )
         print(f"{company.name}: rascunho #{request.id} criado.")
+        created += 1
+
+    print(
+        f"Resumo: created={created} preserved={preserved} skipped={skipped} "
+        f"scope={'confirmed' if confirmed_only else 'all'}."
+    )
+    return created, preserved, skipped
+
+
+def _confirmed_draft_skip_reason(company):
+    if company.discovery_source != GMAIL_DISCOVERY_SOURCE:
+        return "nao foi confirmado por Gmail"
+    if company.discovery_classification != CONFIRMED or not company.discovery_dsar_eligible:
+        return "descoberta nao CONFIRMED/DSAR-eligible"
+    if company.discovery_requires_controller_review:
+        return "controller ainda exige revisao"
+    if company.domain:
+        record = verified_contact_for_domain(company.domain)
+        if record is not None and record.get("standard_gdpr_article_15_template", True) is False:
+            framework = record.get("legal_framework") or "framework juridico especial"
+            return f"nao usa template GDPR Article 15; {framework}"
+    return None
 
 
 def review(db, request_id=None):
@@ -61,15 +122,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["generate", "review", "approve", "send"])
     parser.add_argument("--id", type=int, help="ID do pedido revisado.")
+    parser.add_argument(
+        "--all-companies",
+        action="store_true",
+        help="No generate, opta explicitamente pelo lote legado de todas as empresas.",
+    )
     args = parser.parse_args()
     if args.action == "generate" and args.id is not None:
-        parser.error("generate opera sobre todas as empresas; omita --id")
+        parser.error("generate opera em lote; omita --id")
+    if args.action != "generate" and args.all_companies:
+        parser.error("--all-companies so pode ser usado com generate")
     if args.action in {"approve", "send"} and args.id is None:
         parser.error("Informe --id para autorizar ou enviar um pedido especifico")
     try:
         with SessionLocal() as db:
             if args.action == "generate":
-                generate_missing(db, get_settings())
+                generate_missing(db, get_settings(), confirmed_only=not args.all_companies)
                 print("\nRascunhos prontos. Nenhum pedido aprovado ou enviado.")
             elif args.action == "review":
                 review(db, args.id)
