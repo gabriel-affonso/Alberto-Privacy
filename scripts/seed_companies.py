@@ -104,7 +104,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--resolve",
         action="store_true",
-        help="After seeding, resolve controller data for unresolved candidates.",
+        help="After seeding, resolve controller data for unresolved or unknown candidates.",
     )
     return parser.parse_args()
 
@@ -186,7 +186,11 @@ def main() -> None:
             if not args.resolve:
                 continue
 
-            if company.get("last_resolved_at"):
+            # A previous low-confidence run can set last_resolved_at while still
+            # leaving request_method unknown. Revisit those records so a newly
+            # added verified override can replace the weak crawler result.
+            existing_method = str(company.get("request_method") or "").strip().lower()
+            if company.get("last_resolved_at") and existing_method not in {"", "unknown"}:
                 skipped_resolution += 1
                 print("  controller already resolved; keeping existing result.")
                 continue
@@ -194,6 +198,12 @@ def main() -> None:
             print("  resolving controller...")
             result = api("POST", f"/companies/{company['id']}/resolve-controller")
             resolved += 1
+            company.update(
+                {
+                    "last_resolved_at": result.get("queried_at") or company.get("last_resolved_at"),
+                    "request_method": result.get("request_method"),
+                }
+            )
             print(f"  done. Request method: {result['request_method']}")
         except HTTPError as error:
             failed += 1
