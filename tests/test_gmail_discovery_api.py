@@ -86,4 +86,8 @@ def test_gmail_discovery_endpoint_saves_companies_and_accounts(client: TestClien
 
     accounts_response = client.get("/accounts")
     assert accounts_response.status_code == 200
-    assert len(accounts_response.json()) == 2
+    accounts = accounts_response.json()
+    assert len(accounts) == 2
+    example_account = next(item for item in accounts if item["label"] == "Example")
+    assert example_account["account_identifier"] is None
+    assert example_account["discovery_sender_email"] == "security@example.com"
