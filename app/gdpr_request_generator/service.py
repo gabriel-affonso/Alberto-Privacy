@@ -7,6 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
+from app.gmail_discovery.classification import CONFIRMED
+from app.gmail_discovery.constants import GMAIL_DISCOVERY_SOURCE
 from app.models.account import Account
 from app.models.company import Company
 from app.models.controller_resolution import ControllerResolution
@@ -37,6 +39,15 @@ def generate_request(
     account = db.get(Account, account_id) if account_id else None
     if account_id and (account is None or account.company_id != company.id):
         raise ValueError("Account does not belong to this company")
+    if account and account.discovery_source == GMAIL_DISCOVERY_SOURCE:
+        if company.discovery_classification != CONFIRMED or not company.discovery_dsar_eligible:
+            raise ValueError(
+                "Gmail-discovered evidence is not a confirmed DSAR target; review the discovery classification/controller first"
+            )
+        if company.discovery_requires_controller_review:
+            raise ValueError(
+                "Gmail discovery indicates a processor-mediated relationship; resolve the likely controller before drafting a request"
+            )
     resolution = db.scalars(select(ControllerResolution).where(ControllerResolution.company_id == company.id).order_by(ControllerResolution.queried_at.desc())).first()
     identifiers = _identifiers(account, settings)
     recipient = (resolution.controller_name if resolution else None) or company.name
