@@ -41,7 +41,10 @@ def generate_request(
     account = db.get(Account, account_id) if account_id else None
     if account_id and (account is None or account.company_id != company.id):
         raise ValueError("Account does not belong to this company")
-    if account and account.discovery_source == GMAIL_DISCOVERY_SOURCE:
+    gmail_derived = company.discovery_source == GMAIL_DISCOVERY_SOURCE or (
+        account is not None and account.discovery_source == GMAIL_DISCOVERY_SOURCE
+    )
+    if gmail_derived:
         if company.discovery_classification != CONFIRMED or not company.discovery_dsar_eligible:
             raise ValueError(
                 "Gmail-discovered evidence is not a confirmed DSAR target; review the discovery classification/controller first"
