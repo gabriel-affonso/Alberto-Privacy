@@ -90,7 +90,10 @@ def save_discovered_service(db: Session, service: DiscoveredService) -> tuple[Co
         )
         db.add(account)
 
-    account.account_identifier = service.sender_email
+    # The sender address is evidence about the service, not an identifier of the
+    # user's account. Keep it in the dedicated discovery field and never copy it
+    # into account_identifier. If a user supplied a real identifier manually, it
+    # remains untouched.
     account.discovery_sender_email = service.sender_email
     account.discovery_subject = service.subject
     account.discovery_confidence_score = service.confidence_score
