@@ -46,6 +46,28 @@ def test_probable_gmail_discovery_cannot_generate_request(db_session, tmp_path) 
         )
 
 
+def test_probable_gmail_company_cannot_bypass_gate_without_account_id(db_session, tmp_path) -> None:
+    company = Company(
+        name="Unconfirmed Gmail Service",
+        domain="unconfirmed.example",
+        discovery_source=GMAIL_DISCOVERY_SOURCE,
+        discovery_classification="PROBABLE",
+        discovery_dsar_eligible=False,
+    )
+    db_session.add(company)
+    db_session.commit()
+
+    with pytest.raises(ValueError, match="not a confirmed DSAR target"):
+        generate_request(
+            db_session,
+            company,
+            _settings(tmp_path),
+            "article_15_access",
+            None,
+            False,
+        )
+
+
 def test_confirmed_direct_gmail_discovery_can_generate_draft(db_session, tmp_path) -> None:
     company = Company(
         name="Example",
