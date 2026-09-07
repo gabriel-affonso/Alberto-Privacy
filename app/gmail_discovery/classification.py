@@ -85,6 +85,8 @@ SERVICE_NAME_TERMS = {
     "accounts",
     "recruiting",
     "recruitment",
+    "contact",
+    "ecommerce",
 }
 
 AUTOMATED_LOCALPART_TERMS = {
@@ -98,6 +100,7 @@ AUTOMATED_LOCALPART_TERMS = {
     "newsletter",
     "notify",
     "notification",
+    "notice",
     "security",
     "account",
     "team",
@@ -265,16 +268,31 @@ def _likely_controller_from_platform(company_name: str, subject: str) -> str | N
 def _looks_like_person_sender(company_name: str, sender_email: str, catalog_match: bool) -> bool:
     if catalog_match:
         return False
+
     words = [w for w in re.split(r"\s+", company_name.strip()) if w]
     if len(words) < 2 or len(words) > 5:
         return False
-    lower_words = {re.sub(r"[^a-z]", "", w.lower()) for w in words}
+
+    normalized_words = [re.sub(r"[^a-z]", "", word.lower()) for word in words]
+    lower_words = {word for word in normalized_words if word}
     if lower_words & SERVICE_NAME_TERMS:
         return False
+
     localpart = sender_email.split("@", 1)[0].lower() if "@" in sender_email else ""
     if any(term in localpart for term in AUTOMATED_LOCALPART_TERMS):
         return False
-    return all(any(ch.isalpha() for ch in word) for word in words)
+
+    # A display name that merely has two words is not enough to call it a person:
+    # business names such as "Summersta Herrgard" or "Ecommerce Contact" otherwise
+    # become false IGNORE results. Require the mailbox local-part to actually resemble
+    # at least one substantial token from the display name (e.g. teresacravo,
+    # iliana.boycheva, p.abreu, a.failler).
+    compact_localpart = re.sub(r"[^a-z0-9]", "", localpart)
+    person_tokens = [word for word in normalized_words if len(word) >= 3]
+    if not person_tokens:
+        return False
+
+    return any(token in compact_localpart for token in person_tokens)
 
 
 def classify_discovery(
