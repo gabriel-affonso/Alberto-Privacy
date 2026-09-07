@@ -21,22 +21,24 @@
       "request_method": "portal",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://www.apple.com/legal/privacy/pt/", "https://www.apple.com/legal/privacy/contact/"]
+      "official_sources": ["https://www.apple.com/legal/privacy/pt/", "https://privacy.apple.com/"]
     },
     {
       "brand": "EU Login",
       "domain": "ec.europa.eu",
       "aliases": ["nomail.ec.europa.eu", "webgate.ec.europa.eu"],
       "controller_group": "European Commission",
-      "controller_name": "European Commission – Directorate-General for Informatics (DG DIGIT), Identity & Access Management Service (IAMS)",
+      "controller_name": "European Commission – Directorate-General for Informatics (DIGIT)",
       "controller_country": "European Union",
       "privacy_policy_url": "https://webgate.ec.europa.eu/cas/privacyStatement.html",
       "privacy_request_url": "",
       "dpo_contact": "DATA-PROTECTION-OFFICER@ec.europa.eu",
       "request_method": "email",
-      "confidence": 0.96,
+      "legal_framework": "Regulation (EU) 2018/1725",
+      "standard_gdpr_article_15_template": false,
+      "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://digital-finance-platform.ec.europa.eu/privacy-statement", "https://ec.europa.eu/dpo-register/detail/DPR-EC-03187"]
+      "official_sources": ["https://ec.europa.eu/dpo-register/detail/DPR-EC-03187", "https://webgate.ec.europa.eu/cas/privacyStatement.html"]
     },
     {
       "brand": "CORE",
@@ -48,7 +50,7 @@
       "privacy_request_url": "",
       "dpo_contact": "data-protection@open.ac.uk",
       "request_method": "email",
-      "confidence": 0.98,
+      "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
       "official_sources": ["https://core.ac.uk/privacy", "https://help.open.ac.uk/requesting-access-data"]
     },
@@ -59,12 +61,12 @@
       "controller_name": "Activision Publishing, Inc.",
       "controller_country": "United States",
       "privacy_policy_url": "https://www.activision.com/legal/privacy-policy",
-      "privacy_request_url": "",
+      "privacy_request_url": "https://support.activision.com/privacy/request",
       "dpo_contact": "DPO@activision.com",
       "request_method": "email",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://www.activision.com/legal/privacy-policy"]
+      "official_sources": ["https://www.activision.com/legal/privacy-policy", "https://support.activision.com/privacy/request"]
     },
     {
       "brand": "Cloudflare",
@@ -86,13 +88,13 @@
       "controller_group": "Universidade de Coimbra",
       "controller_name": "Universidade de Coimbra",
       "controller_country": "Portugal",
-      "privacy_policy_url": "https://www.uc.pt/protecao-de-dados-e-informacao-administrativa/politica-de-privacidade/",
+      "privacy_policy_url": "https://www.uc.pt/protecao-de-dados-e-informacao-administrativa/protecao-de-dados-pessoais/",
       "privacy_request_url": "",
       "dpo_contact": "epd@uc.pt",
       "request_method": "email",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://fcdef.uc.pt/pt/comissao-de-etica", "https://forms.fd.uc.pt/datajuris/"]
+      "official_sources": ["https://www.uc.pt/protecao-de-dados-e-informacao-administrativa/protecao-de-dados-pessoais/", "https://www.uc.pt/protecao-de-dados-e-informacao-administrativa/protecao-de-dados-pessoais/notificacoes/"]
     },
     {
       "brand": "Infineon",
@@ -114,13 +116,13 @@
       "controller_group": "McKinsey & Company",
       "controller_name": "McKinsey & Company and applicable affiliate",
       "controller_country": "",
-      "privacy_policy_url": "https://www.mckinsey.com/mckinsey-recruitment-privacy-notice",
+      "privacy_policy_url": "https://www.mckinsey.com/privacy-notice",
       "privacy_request_url": "",
       "dpo_contact": "DataSubjectRights@mckinsey.com",
       "request_method": "email",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://www.mckinsey.com/mckinsey-recruitment-privacy-notice"]
+      "official_sources": ["https://www.mckinsey.com/privacy-notice"]
     },
     {
       "brand": "N26",
@@ -128,13 +130,13 @@
       "controller_group": "N26",
       "controller_name": "N26 Bank SE",
       "controller_country": "Germany",
-      "privacy_policy_url": "https://n26.com/en-eu/legal-documents",
+      "privacy_policy_url": "https://n26.com/en-eu/legal-documents/privacy-policy",
       "privacy_request_url": "https://n26-privacy.my.onetrust.com/webform/e6969c9f-ac87-40b3-8ef6-66f0cd90a48b/58b5de95-f188-4236-8c30-4b6bbe70716e",
       "dpo_contact": "dpo@n26.com",
       "request_method": "form",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://support.n26.com/en-eu/account-and-personal-details/personal-information-and-data/what-is-the-n26-webform-for-gdpr-requests", "https://support.n26.com/en-es/account-and-personal-details/miscellaneous/why-pwc-audit-letter"]
+      "official_sources": ["https://support.n26.com/en-eu/account-and-personal-details/personal-information-and-data/how-to-download-my-personal-data", "https://n26.com/en-eu/legal-documents/privacy-policy"]
     },
     {
       "brand": "Porkbun",
@@ -160,9 +162,9 @@
       "privacy_request_url": "",
       "dpo_contact": "privacy@sheingroup.com",
       "request_method": "email",
-      "confidence": 0.98,
+      "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://m.shein.com/euqs/Privacy-Center-a-1045.html", "https://m.shein.com/pt/Terms-and-Conditions-a-399.html?language=en"]
+      "official_sources": ["https://m.shein.com/pt/Privacy-Center-a-1045.html", "https://m.shein.com/pt/Terms-and-Conditions-a-399.html"]
     },
     {
       "brand": "Surfshark",
@@ -184,15 +186,15 @@
       "domain": "mi.com",
       "aliases": ["xiaomi.com", "notice.xiaomi.com"],
       "controller_group": "Xiaomi",
-      "controller_name": "Xiaomi Technology Netherlands B.V. and Xiaomi Communications Co., Ltd.",
-      "controller_country": "Netherlands / China",
-      "privacy_policy_url": "https://privacy.mi.com/all/pt_PT/",
+      "controller_name": "Xiaomi Technology Netherlands B.V.",
+      "controller_country": "Netherlands",
+      "privacy_policy_url": "https://privacy.mi.com/Privacy_Support/en_US",
       "privacy_request_url": "https://privacy.mi.com/support",
       "dpo_contact": "",
       "request_method": "form",
       "confidence": 0.99,
       "verified_at": "2026-09-07T10:35:00Z",
-      "official_sources": ["https://privacy.mi.com/all/pt_PT/", "https://privacy.mi.com/support"]
+      "official_sources": ["https://privacy.mi.com/Privacy_Support/en_US", "https://privacy.mi.com/support"]
     }
   ]
 }
