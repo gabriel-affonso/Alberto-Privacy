@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     openclaw_model: str = ""
     openclaw_max_input_chars: int = 12000
     alberto_bridge_token: str = ""
+    alberto_job_lease_minutes: int = 20
+    alberto_job_max_attempts: int = 3
+    telegram_bot_token: str = ""
+    telegram_approval_chat_id: str = ""
     privacy_user_full_name: str = ""
     privacy_user_preferred_email: str = ""
     privacy_user_optional_phone: str = ""

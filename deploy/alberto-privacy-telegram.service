@@ -1,0 +1,10 @@
+[Unit]
+Description=Privacy Agent Telegram approval poller
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+# Change this path once to the clone used by Docker Compose on the NUC.
+WorkingDirectory=/opt/privacy-agent
+ExecStart=/usr/bin/docker compose exec -T privacy-api python scripts/process_telegram_approvals.py

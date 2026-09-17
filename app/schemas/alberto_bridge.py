@@ -10,6 +10,15 @@ class AlbertoJobRead(BaseModel):
     status: str
     payload: dict[str, Any]
     claimed_at: datetime | None
+    attempts: int
+
+
+class AlbertoJobSummary(BaseModel):
+    pending: int
+    claimed: int
+    completed: int
+    rejected: int
+    failed: int
 
 
 class AlbertoJobCompletion(BaseModel):

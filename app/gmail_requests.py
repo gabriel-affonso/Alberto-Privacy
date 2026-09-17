@@ -9,6 +9,7 @@ from app.gmail_delivery import GmailSender
 from app.models.communication import Communication
 from app.models.gdpr_request import GdprRequest
 from app.models.privacy_case import CaseEvent
+from app.telegram_approval import approval_allows_send, enabled as telegram_approval_enabled
 
 
 def send_approved_request(db: Session, request: GdprRequest, sender: GmailSender, settings: Settings) -> Communication:
@@ -18,6 +19,8 @@ def send_approved_request(db: Session, request: GdprRequest, sender: GmailSender
         raise ValueError("Request content is incomplete")
     if not settings.privacy_user_preferred_email:
         raise ValueError("A configured preferred email is required")
+    if telegram_approval_enabled(settings) and not approval_allows_send(db, request.id):
+        raise ValueError("This email requires a Telegram approval before it can be sent")
     resolution = request.controller_resolution
     method = resolution.request_method if resolution else request.company.request_method
     if method == "portal":

@@ -8,7 +8,9 @@ Use somente a API local `http://127.0.0.1:8000` e o token em
 
 1. Leia o token sem o exibir e faça `POST /alberto/jobs/next` com o header
    `Authorization: Bearer <token>`.
-2. Se a resposta for `null`, termine respondendo somente `NO_REPLY`.
+2. Se a resposta for `null`, termine respondendo somente `NO_REPLY`. Caso haja
+   um job, processe-o e volte ao passo 1. Continue até a API devolver `null`;
+   uma única execução do skill deve esvaziar toda a fila disponível.
 3. Use exclusivamente as páginas e instruções presentes no `payload` do job.
    Não navegue para novas páginas e não acesse Gmail, PostgreSQL, arquivos de
    casos nem outras rotas do Privacy Agent.
@@ -26,3 +28,7 @@ Use somente a API local `http://127.0.0.1:8000` e o token em
    é obrigatório.
 6. Use `{"error":"motivo"}` somente se o job for impossível de processar.
    Não envie comunicações externas nem solicitações de privacidade.
+
+Os jobs têm lease. Se uma execução for interrompida, a API devolve o job à fila
+após o prazo configurado; não tente manter estado local nem repetir um job já
+concluído.

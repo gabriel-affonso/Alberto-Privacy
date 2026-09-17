@@ -6,6 +6,7 @@ from app.models.controller_resolution import ControllerResolution
 from app.models.controller_evidence import ControllerEvidence
 from app.models.evidence import Evidence
 from app.models.gdpr_request import GdprRequest
+from app.models.telegram_approval import TelegramApproval, TelegramBotState
 from app.models.privacy_case import CaseEvent, PrivacyCase
 from app.models.response_data import (
     AdvertisingData, AutomatedDecisionInformation, DataRecipient, DataSource, DataTransfer,
@@ -22,6 +23,8 @@ __all__ = [
     "ControllerEvidence",
     "Evidence",
     "GdprRequest",
+    "TelegramApproval",
+    "TelegramBotState",
     "PrivacyCase",
     "CaseEvent",
     "ResponseFile",

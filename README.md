@@ -75,6 +75,10 @@ OPENCLAW_ENABLED=false
 OPENCLAW_MODEL=
 OPENCLAW_MAX_INPUT_CHARS=12000
 ALBERTO_BRIDGE_TOKEN=
+ALBERTO_JOB_LEASE_MINUTES=20
+ALBERTO_JOB_MAX_ATTEMPTS=3
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_APPROVAL_CHAT_ID=
 GMAIL_OAUTH_SEND_TOKEN_FILE=secrets/gmail_send_token.json
 PRIVACY_USER_FULL_NAME=
 PRIVACY_USER_PREFERRED_EMAIL=
@@ -271,7 +275,11 @@ Each run is stored in `controller_resolutions` with the query timestamp and evid
 
 ### Optional Alberto/OpenClaw interpretation
 
-`OPENCLAW_ENABLED=false` is the safe default. When enabled together with `ALBERTO_BRIDGE_TOKEN`, controller resolution creates a restricted, queued interpretation task. The Privacy Agent never calls the OpenClaw Gateway, never stores its token, and never gives Alberto database or Gmail access. Alberto can only claim a task and return a structured result through two local bridge endpoints. See [the NUC integration guide](docs/ALBERTO_INTEGRATION.md).
+`OPENCLAW_ENABLED=false` is the safe default. When enabled together with `ALBERTO_BRIDGE_TOKEN`, controller resolution creates a restricted, queued interpretation task. The Privacy Agent never calls the OpenClaw Gateway, never stores its token, and never gives Alberto database or Gmail access. Alberto can only claim a task and return a structured result through two local bridge endpoints. Jobs are retried after an interrupted worker lease and stop after the configured attempt limit. See [the NUC integration guide](docs/ALBERTO_INTEGRATION.md).
+
+### Telegram approval before sending
+
+Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_APPROVAL_CHAT_ID` to enable a local-polling approval gate. The autopilot sends one message per sendable draft, showing company, recipient, and subject. Only the configured Telegram chat can click **Aprovar e enviar**; that single-use approval changes the request to approved and the next autopilot pass sends it through Gmail. **Recusar** keeps the draft and prevents delivery. Telegram credentials are never returned by the API or included in the Alberto bridge.
 
 ## GDPR request workflow
 

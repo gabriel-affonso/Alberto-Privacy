@@ -1,7 +1,7 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.controller_resolver.openclaw import merge_controller_interpretation
@@ -12,13 +12,38 @@ from app.models.controller_evidence import ControllerEvidence
 from app.models.controller_resolution import ControllerResolution
 
 
-def claim_next_job(db: Session, worker_name: str) -> AlbertoJob | None:
+def recover_expired_jobs(db: Session, lease_minutes: int, max_attempts: int) -> None:
+    """Make interrupted worker jobs available again without retrying forever."""
+    now = datetime.now(timezone.utc)
+    expired_before = now - timedelta(minutes=max(1, lease_minutes))
+    expired = AlbertoJob.status == "CLAIMED"
+    stale = AlbertoJob.claimed_at < expired_before
+    db.execute(
+        update(AlbertoJob)
+        .where(expired, stale, AlbertoJob.attempts < max(1, max_attempts))
+        .values(status="PENDING", claimed_by=None, claimed_at=None)
+    )
+    db.execute(
+        update(AlbertoJob)
+        .where(expired, stale, AlbertoJob.attempts >= max(1, max_attempts))
+        .values(status="FAILED", error="Worker lease expired after maximum retry attempts.", completed_at=now)
+    )
+    db.commit()
+
+
+def claim_next_job(db: Session, worker_name: str, lease_minutes: int = 20, max_attempts: int = 3) -> AlbertoJob | None:
+    recover_expired_jobs(db, lease_minutes, max_attempts)
     job = db.scalars(
-        select(AlbertoJob).where(AlbertoJob.status == "PENDING").order_by(AlbertoJob.created_at).limit(1)
+        select(AlbertoJob)
+        .where(AlbertoJob.status == "PENDING")
+        .order_by(AlbertoJob.created_at)
+        .limit(1)
+        .with_for_update(skip_locked=True)
     ).first()
     if job is None:
         return None
     job.status, job.claimed_by, job.claimed_at = "CLAIMED", worker_name, datetime.now(timezone.utc)
+    job.attempts += 1
     db.commit()
     db.refresh(job)
     return job

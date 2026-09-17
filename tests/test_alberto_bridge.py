@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
@@ -74,3 +74,27 @@ def test_alberto_bridge_has_its_own_token(client: TestClient, db_session) -> Non
         assert response.json()["job_type"] == "controller_resolution_interpretation"
     finally:
         app.dependency_overrides.pop(get_settings, None)
+
+
+def test_expired_claim_is_recovered_once_and_then_failed(db_session) -> None:
+    job = AlbertoJob(
+        job_type="controller_resolution_interpretation",
+        payload={"pages": []},
+        status="CLAIMED",
+        attempts=1,
+        claimed_by="interrupted-worker",
+        claimed_at=datetime.now(timezone.utc) - timedelta(minutes=30),
+    )
+    db_session.add(job)
+    db_session.commit()
+
+    reclaimed = claim_next_job(db_session, "alberto", lease_minutes=10, max_attempts=2)
+    assert reclaimed is not None
+    assert reclaimed.id == job.id
+    assert reclaimed.attempts == 2
+
+    reclaimed.claimed_at = datetime.now(timezone.utc) - timedelta(minutes=30)
+    db_session.commit()
+    assert claim_next_job(db_session, "alberto", lease_minutes=10, max_attempts=2) is None
+    db_session.refresh(job)
+    assert job.status == "FAILED"

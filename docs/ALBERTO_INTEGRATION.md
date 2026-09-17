@@ -29,6 +29,10 @@ Put it in the Privacy Agent's `.env` file:
 OPENCLAW_ENABLED=true
 OPENCLAW_MODEL=
 ALBERTO_BRIDGE_TOKEN=<the-generated-secret>
+ALBERTO_JOB_LEASE_MINUTES=20
+ALBERTO_JOB_MAX_ATTEMPTS=3
+TELEGRAM_BOT_TOKEN=<token-do-seu-bot>
+TELEGRAM_APPROVAL_CHAT_ID=<seu-chat-id-numerico>
 ```
 
 Restart the API after changing the configuration:
@@ -119,4 +123,55 @@ Add this instruction to Alberto's privacy-agent workflow or skill:
 
 > For a Privacy Agent task, claim one job using the local bridge. Interpret only the supplied page text. Do not browse, call the Privacy Agent's other endpoints, access Gmail, send communications, or use the OpenClaw Gateway token. Return a value only if a supplied excerpt proves it; otherwise leave it empty. Submit the structured result to the same bridge.
 
-The bridge is asynchronous: resolving a company saves the deterministic result immediately and queues a task only for missing controller details. Run the Alberto workflow periodically or invoke it after a resolution.
+## Operação contínua
+
+O bridge é assíncrono: resolver uma empresa guarda imediatamente o resultado
+determinístico e cria um job apenas para os dados ainda em falta. O skill agora
+consome todos os jobs disponíveis em uma única execução. Crie uma única tarefa
+recorrente no agendador nativo do Alberto/OpenClaw, a cada 5 minutos, com este
+texto:
+
+> Execute o skill `privacy-agent-bridge` para processar toda a fila do Privacy Agent. Se não houver trabalho, responda somente `NO_REPLY`. Não execute nenhuma outra ação.
+
+Assim, novos jobs são processados sem intervenção. Se uma execução morrer no
+meio, o job é automaticamente devolvido à fila após
+`ALBERTO_JOB_LEASE_MINUTES`; após `ALBERTO_JOB_MAX_ATTEMPTS` tentativas ele é
+marcado como `FAILED`, evitando loops infinitos. Consulte a saúde da fila sem
+expor os dados privados:
+
+```bash
+curl -fsS http://127.0.0.1:8000/alberto/jobs/summary \
+  -H "Authorization: Bearer $PRIVACY_AGENT_ALBERTO_TOKEN"
+```
+
+Para automatizar também o lado seguro do Privacy Agent (descobrir contas no
+Gmail já autorizado, resolver controladores e criar rascunhos), instale o
+timer incluído. Ele nunca aprova, envia emails, submete portais, nem tenta
+passar por MFA/CAPTCHA:
+
+```bash
+sudo install -m 644 deploy/alberto-privacy-autopilot.service /etc/systemd/system/
+sudo install -m 644 deploy/alberto-privacy-autopilot.timer /etc/systemd/system/
+sudo install -m 644 deploy/alberto-privacy-telegram.service /etc/systemd/system/
+sudo install -m 644 deploy/alberto-privacy-telegram.timer /etc/systemd/system/
+# Edite WorkingDirectory no .service para apontar para este clone antes de ativar.
+sudo systemctl daemon-reload
+sudo systemctl enable --now alberto-privacy-autopilot.timer
+sudo systemctl enable --now alberto-privacy-telegram.timer
+```
+
+O timer executa `scripts/run_autopilot.py` a cada 15 minutos. A primeira
+autorização OAuth do Gmail continua sendo interativa; depois disso, o token é
+renovado normalmente em background.
+
+## Aprovação de emails pelo Telegram
+
+Crie um bot com o BotFather, inicie uma conversa com ele e configure o token e
+o ID numérico do seu chat no `.env`. O autopilot faz polling para a API do
+Telegram; não há webhook nem porta pública adicional. Para cada rascunho com
+destinatário de email verificado, ele envia uma mensagem com **Aprovar e
+enviar** e **Recusar**. Só aquele chat pode responder. A aprovação contém uma
+capacidade de uso único, guardada no banco apenas como hash, e o próximo ciclo
+envia o email automaticamente. O timer separado de Telegram faz esse ciclo a
+cada minuto, portanto a aprovação normalmente é atendida em até um minuto.
+Recusar não apaga o rascunho nem envia nada.
