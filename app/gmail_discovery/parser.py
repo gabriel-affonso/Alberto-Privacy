@@ -3,12 +3,14 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from email.utils import parseaddr, parsedate_to_datetime
 
+from app.gmail_discovery.classification import canonicalize_discovery_domain, classify_discovery
 from app.gmail_discovery.types import DiscoveredService, GmailMessageMetadata
 
 
 @dataclass
 class _CandidateAccumulator:
     domain: str
+    raw_domain: str
     company_name: str
     sender_email: str
     subject: str | None
@@ -85,42 +87,93 @@ def aggregate_discovered_services(
 
     for message in messages:
         display_name, sender_email = parse_sender(message.sender)
-        domain = sender_domain(sender_email)
-        if domain is None or sender_email is None:
+        raw_domain = sender_domain(sender_email)
+        if raw_domain is None or sender_email is None:
             continue
 
-        candidate = candidates.get(domain)
+        canonical_domain = canonicalize_discovery_domain(raw_domain)
+        candidate = candidates.get(canonical_domain)
         if candidate is None:
             candidate = _CandidateAccumulator(
-                domain=domain,
-                company_name=company_name_from_sender(display_name, domain),
+                domain=canonical_domain,
+                raw_domain=raw_domain,
+                company_name=company_name_from_sender(display_name, canonical_domain),
                 sender_email=sender_email,
                 subject=message.subject,
             )
-            candidates[domain] = candidate
+            candidates[canonical_domain] = candidate
 
         candidate.message_ids.add(message.message_id)
         candidate.matched_queries.add(message.matched_query)
         if message.date is not None:
             candidate.dates.append(message.date)
 
+        # Prefer a subject that carries stronger account semantics over a generic first
+        # newsletter subject.  The classifier remains deterministic and does not read
+        # message bodies.
+        if message.subject and candidate.subject:
+            current = classify_discovery(
+                domain=candidate.raw_domain,
+                company_name=candidate.company_name,
+                sender_email=candidate.sender_email,
+                subject=candidate.subject,
+                message_count=max(1, len(candidate.message_ids)),
+                base_confidence=0.45,
+            )
+            proposed = classify_discovery(
+                domain=raw_domain,
+                company_name=company_name_from_sender(display_name, canonical_domain),
+                sender_email=sender_email,
+                subject=message.subject,
+                message_count=max(1, len(candidate.message_ids)),
+                base_confidence=0.45,
+            )
+            if proposed.confidence_score > current.confidence_score:
+                candidate.raw_domain = raw_domain
+                candidate.company_name = company_name_from_sender(display_name, canonical_domain)
+                candidate.sender_email = sender_email
+                candidate.subject = message.subject
+
     services: list[DiscoveredService] = []
     for candidate in candidates.values():
         first_seen_at = min(candidate.dates) if candidate.dates else None
         last_seen_at = max(candidate.dates) if candidate.dates else None
         message_count = len(candidate.message_ids)
+        base = confidence_score(message_count, len(candidate.matched_queries))
+        classification = classify_discovery(
+            domain=candidate.raw_domain,
+            company_name=candidate.company_name,
+            sender_email=candidate.sender_email,
+            subject=candidate.subject,
+            message_count=message_count,
+            base_confidence=base,
+        )
         services.append(
             DiscoveredService(
-                domain=candidate.domain,
+                domain=classification.canonical_domain,
+                raw_domain=classification.raw_domain,
                 company_name=candidate.company_name,
                 sender_email=candidate.sender_email,
                 subject=candidate.subject,
                 first_seen_at=first_seen_at,
                 last_seen_at=last_seen_at,
                 message_count=message_count,
-                confidence_score=confidence_score(message_count, len(candidate.matched_queries)),
+                confidence_score=classification.confidence_score,
                 matched_queries=candidate.matched_queries,
+                classification=classification.classification,
+                relationship=classification.relationship,
+                likely_controller=classification.likely_controller,
+                requires_controller_review=classification.requires_controller_review,
+                dsar_eligible=classification.dsar_eligible,
+                classification_reason=classification.reason,
             )
         )
 
-    return sorted(services, key=lambda service: (-service.confidence_score, service.domain))
+    return sorted(
+        services,
+        key=lambda service: (
+            {"CONFIRMED": 0, "PROBABLE": 1, "WEAK": 2, "IGNORE": 3}.get(service.classification, 4),
+            -service.confidence_score,
+            service.domain,
+        ),
+    )

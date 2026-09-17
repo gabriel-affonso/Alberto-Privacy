@@ -24,6 +24,13 @@ class DiscoveredService:
     message_count: int
     confidence_score: float
     matched_queries: set[str] = field(default_factory=set)
+    raw_domain: str | None = None
+    classification: str = "WEAK"
+    relationship: str = "direct-service"
+    likely_controller: str | None = None
+    requires_controller_review: bool = False
+    dsar_eligible: bool = False
+    classification_reason: str | None = None
 
 
 class GmailClient(Protocol):

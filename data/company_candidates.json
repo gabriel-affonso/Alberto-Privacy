@@ -1,0 +1,1422 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-07",
+  "purpose": "Curated candidate service/company catalog for account discovery before GDPR Article 15 controller resolution.",
+  "policy": {
+    "candidate_is_not_confirmation": true,
+    "do_not_send_automatically": true,
+    "deduplicate_by_controller_group_before_request": true
+  },
+  "candidates": [
+    {
+      "brand": "Google",
+      "domain": "google.com",
+      "category": "technology_cloud",
+      "parent_company": "Alphabet",
+      "likely_controller_group": "Google",
+      "priority": "P1",
+      "reason_for_candidate": "Core identity, Gmail/Drive/Maps/Photos/YouTube ecosystem.",
+      "status": "candidate"
+    },
+    {
+      "brand": "YouTube",
+      "domain": "youtube.com",
+      "category": "media",
+      "parent_company": "Alphabet",
+      "likely_controller_group": "Google",
+      "priority": "P1",
+      "reason_for_candidate": "Likely linked to Google account; viewing, subscriptions and activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "GitHub",
+      "domain": "github.com",
+      "category": "developer",
+      "parent_company": "Microsoft",
+      "likely_controller_group": "GitHub",
+      "priority": "P1",
+      "reason_for_candidate": "Developer account, repositories, authentication and activity logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "OpenAI / ChatGPT",
+      "domain": "openai.com",
+      "category": "ai",
+      "parent_company": "OpenAI",
+      "likely_controller_group": "OpenAI",
+      "priority": "P1",
+      "reason_for_candidate": "AI account, conversation and product usage data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Microsoft",
+      "domain": "microsoft.com",
+      "category": "technology_cloud",
+      "parent_company": "Microsoft",
+      "likely_controller_group": "Microsoft",
+      "priority": "P1",
+      "reason_for_candidate": "Windows/Outlook/OneDrive/Xbox/Office identity and usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Samsung",
+      "domain": "samsung.com",
+      "category": "devices",
+      "parent_company": "Samsung Electronics",
+      "likely_controller_group": "Samsung",
+      "priority": "P1",
+      "reason_for_candidate": "Device account, services, support and telemetry.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Meta / Facebook",
+      "domain": "facebook.com",
+      "category": "social",
+      "parent_company": "Meta Platforms",
+      "likely_controller_group": "Meta",
+      "priority": "P1",
+      "reason_for_candidate": "Social account, ads, activity and messaging metadata.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Instagram",
+      "domain": "instagram.com",
+      "category": "social",
+      "parent_company": "Meta Platforms",
+      "likely_controller_group": "Meta",
+      "priority": "P1",
+      "reason_for_candidate": "Likely Meta account with social, ads and activity data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "WhatsApp",
+      "domain": "whatsapp.com",
+      "category": "messaging",
+      "parent_company": "Meta Platforms",
+      "likely_controller_group": "Meta",
+      "priority": "P1",
+      "reason_for_candidate": "Messaging account and service metadata.",
+      "status": "candidate"
+    },
+    {
+      "brand": "PayPal",
+      "domain": "paypal.com",
+      "category": "finance_payments",
+      "parent_company": "PayPal Holdings",
+      "likely_controller_group": "PayPal",
+      "priority": "P1",
+      "reason_for_candidate": "Payments, merchants, devices and account history.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Revolut",
+      "domain": "revolut.com",
+      "category": "finance_payments",
+      "parent_company": "Revolut",
+      "likely_controller_group": "Revolut",
+      "priority": "P1",
+      "reason_for_candidate": "Financial account, transactions, devices and verification.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Amazon",
+      "domain": "amazon.com",
+      "category": "marketplace",
+      "parent_company": "Amazon",
+      "likely_controller_group": "Amazon",
+      "priority": "P1",
+      "reason_for_candidate": "Purchases, browsing, addresses, payments and devices.",
+      "status": "candidate"
+    },
+    {
+      "brand": "AliExpress",
+      "domain": "aliexpress.com",
+      "category": "marketplace",
+      "parent_company": "Alibaba Group",
+      "likely_controller_group": "AliExpress / Alibaba",
+      "priority": "P1",
+      "reason_for_candidate": "Marketplace purchases, addresses, payments and browsing.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Temu",
+      "domain": "temu.com",
+      "category": "marketplace",
+      "parent_company": "Whaleco / PDD Holdings",
+      "likely_controller_group": "Temu",
+      "priority": "P1",
+      "reason_for_candidate": "Marketplace purchases, addresses, marketing and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Myprotein",
+      "domain": "myprotein.com",
+      "category": "retail_food",
+      "parent_company": "THG",
+      "likely_controller_group": "THG",
+      "priority": "P1",
+      "reason_for_candidate": "Purchase and account history for supplements/nutrition.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Bulk",
+      "domain": "bulk.com",
+      "category": "retail_food",
+      "parent_company": "Sports Supplements / Bulk",
+      "likely_controller_group": "Bulk",
+      "priority": "P1",
+      "reason_for_candidate": "Purchase and account history for supplements/nutrition.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Spotify",
+      "domain": "spotify.com",
+      "category": "media",
+      "parent_company": "Spotify",
+      "likely_controller_group": "Spotify",
+      "priority": "P1",
+      "reason_for_candidate": "Listening history, preferences, devices and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Notion",
+      "domain": "notion.so",
+      "category": "productivity",
+      "parent_company": "Notion Labs",
+      "likely_controller_group": "Notion",
+      "priority": "P1",
+      "reason_for_candidate": "Workspace identity and potentially extensive work/personal content.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Tailscale",
+      "domain": "tailscale.com",
+      "category": "developer",
+      "parent_company": "Tailscale",
+      "likely_controller_group": "Tailscale",
+      "priority": "P1",
+      "reason_for_candidate": "Network identity, devices and connection metadata.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Google Colab",
+      "domain": "colab.research.google.com",
+      "category": "developer",
+      "parent_company": "Alphabet",
+      "likely_controller_group": "Google",
+      "priority": "P1",
+      "reason_for_candidate": "Google-linked notebook and compute usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Burger King Portugal",
+      "domain": "burgerking.pt",
+      "category": "food_delivery",
+      "parent_company": "Restaurant Brands Iberia / Burger King",
+      "likely_controller_group": "Burger King Portugal",
+      "priority": "P1",
+      "reason_for_candidate": "Portugal app/loyalty/orders may hold purchase and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "McDonald's Portugal",
+      "domain": "mcdonalds.pt",
+      "category": "food_delivery",
+      "parent_company": "McDonald's",
+      "likely_controller_group": "McDonald's Portugal",
+      "priority": "P1",
+      "reason_for_candidate": "Portugal app/loyalty/orders may hold purchase and location data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Glovo",
+      "domain": "glovoapp.com",
+      "category": "food_delivery",
+      "parent_company": "Glovo / Delivery Hero",
+      "likely_controller_group": "Glovo",
+      "priority": "P1",
+      "reason_for_candidate": "Orders, addresses, location, payments and merchants.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Uber",
+      "domain": "uber.com",
+      "category": "mobility",
+      "parent_company": "Uber Technologies",
+      "likely_controller_group": "Uber",
+      "priority": "P1",
+      "reason_for_candidate": "Trips, locations, payments and devices.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Uber Eats",
+      "domain": "ubereats.com",
+      "category": "food_delivery",
+      "parent_company": "Uber Technologies",
+      "likely_controller_group": "Uber",
+      "priority": "P1",
+      "reason_for_candidate": "Food orders, addresses, payments and linked Uber identity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Bolt",
+      "domain": "bolt.eu",
+      "category": "mobility",
+      "parent_company": "Bolt Technology",
+      "likely_controller_group": "Bolt",
+      "priority": "P1",
+      "reason_for_candidate": "Trips, location, payments and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Too Good To Go",
+      "domain": "toogoodtogo.com",
+      "category": "food_delivery",
+      "parent_company": "Too Good To Go",
+      "likely_controller_group": "Too Good To Go",
+      "priority": "P2",
+      "reason_for_candidate": "Food purchases, locations and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "TheFork",
+      "domain": "thefork.pt",
+      "category": "food_delivery",
+      "parent_company": "Tripadvisor",
+      "likely_controller_group": "TheFork",
+      "priority": "P2",
+      "reason_for_candidate": "Restaurant bookings, preferences and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Domino's Portugal",
+      "domain": "dominos.pt",
+      "category": "food_delivery",
+      "parent_company": "Domino's",
+      "likely_controller_group": "Domino's Portugal",
+      "priority": "P2",
+      "reason_for_candidate": "Online/app orders and address history.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Pizza Hut Portugal",
+      "domain": "pizzahut.pt",
+      "category": "food_delivery",
+      "parent_company": "Ibersol / Pizza Hut",
+      "likely_controller_group": "Pizza Hut Portugal",
+      "priority": "P2",
+      "reason_for_candidate": "Online/app orders and account history.",
+      "status": "candidate"
+    },
+    {
+      "brand": "KFC Portugal",
+      "domain": "kfc.pt",
+      "category": "food_delivery",
+      "parent_company": "Ibersol / Yum! Brands",
+      "likely_controller_group": "KFC Portugal",
+      "priority": "P2",
+      "reason_for_candidate": "App/orders/marketing if an account was used.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Rede Expressos",
+      "domain": "rede-expressos.pt",
+      "category": "transport",
+      "parent_company": "Rede Expressos",
+      "likely_controller_group": "Rede Expressos",
+      "priority": "P1",
+      "reason_for_candidate": "Bus bookings, routes, passenger and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "FlixBus",
+      "domain": "flixbus.pt",
+      "category": "transport",
+      "parent_company": "Flix",
+      "likely_controller_group": "Flix",
+      "priority": "P1",
+      "reason_for_candidate": "Bookings, routes, passenger and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "CP - Comboios de Portugal",
+      "domain": "cp.pt",
+      "category": "transport",
+      "parent_company": "CP",
+      "likely_controller_group": "CP",
+      "priority": "P1",
+      "reason_for_candidate": "myCP account, tickets, journeys and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "TAP Air Portugal",
+      "domain": "flytap.com",
+      "category": "travel",
+      "parent_company": "TAP Air Portugal",
+      "likely_controller_group": "TAP",
+      "priority": "P1",
+      "reason_for_candidate": "Flights, passenger profile, Miles&Go and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Ryanair",
+      "domain": "ryanair.com",
+      "category": "travel",
+      "parent_company": "Ryanair",
+      "likely_controller_group": "Ryanair",
+      "priority": "P2",
+      "reason_for_candidate": "Flights, passengers, documents and payments.",
+      "status": "candidate"
+    },
+    {
+      "brand": "easyJet",
+      "domain": "easyjet.com",
+      "category": "travel",
+      "parent_company": "easyJet",
+      "likely_controller_group": "easyJet",
+      "priority": "P2",
+      "reason_for_candidate": "Flights, passenger and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Wizz Air",
+      "domain": "wizzair.com",
+      "category": "travel",
+      "parent_company": "Wizz Air",
+      "likely_controller_group": "Wizz Air",
+      "priority": "P2",
+      "reason_for_candidate": "Flights, passenger and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Lufthansa",
+      "domain": "lufthansa.com",
+      "category": "travel",
+      "parent_company": "Lufthansa Group",
+      "likely_controller_group": "Lufthansa Group",
+      "priority": "P2",
+      "reason_for_candidate": "Flights, loyalty and passenger data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "KLM",
+      "domain": "klm.com",
+      "category": "travel",
+      "parent_company": "Air France-KLM",
+      "likely_controller_group": "Air France-KLM",
+      "priority": "P2",
+      "reason_for_candidate": "Flights and Flying Blue-related account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Air France",
+      "domain": "airfrance.com",
+      "category": "travel",
+      "parent_company": "Air France-KLM",
+      "likely_controller_group": "Air France-KLM",
+      "priority": "P2",
+      "reason_for_candidate": "Flights and Flying Blue-related account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Iberia",
+      "domain": "iberia.com",
+      "category": "travel",
+      "parent_company": "IAG",
+      "likely_controller_group": "Iberia / IAG",
+      "priority": "P2",
+      "reason_for_candidate": "Flights, loyalty and passenger data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Vueling",
+      "domain": "vueling.com",
+      "category": "travel",
+      "parent_company": "IAG",
+      "likely_controller_group": "Vueling / IAG",
+      "priority": "P2",
+      "reason_for_candidate": "Flights and passenger data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Omio",
+      "domain": "omio.com",
+      "category": "travel",
+      "parent_company": "Omio",
+      "likely_controller_group": "Omio",
+      "priority": "P2",
+      "reason_for_candidate": "Searches and multi-modal bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Trainline",
+      "domain": "thetrainline.com",
+      "category": "travel",
+      "parent_company": "Trainline",
+      "likely_controller_group": "Trainline",
+      "priority": "P2",
+      "reason_for_candidate": "Rail searches and bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "BlaBlaCar",
+      "domain": "blablacar.com",
+      "category": "mobility",
+      "parent_company": "BlaBlaCar",
+      "likely_controller_group": "BlaBlaCar",
+      "priority": "P2",
+      "reason_for_candidate": "Trips, messages, identity and payments.",
+      "status": "candidate"
+    },
+    {
+      "brand": "FREE NOW",
+      "domain": "free-now.com",
+      "category": "mobility",
+      "parent_company": "FREE NOW",
+      "likely_controller_group": "FREE NOW",
+      "priority": "P2",
+      "reason_for_candidate": "Taxi trips, locations and payments.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Via Verde",
+      "domain": "viaverde.pt",
+      "category": "mobility",
+      "parent_company": "Brisa / Via Verde",
+      "likely_controller_group": "Via Verde",
+      "priority": "P2",
+      "reason_for_candidate": "Tolls, parking, mobility and payment data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Navegante / TML",
+      "domain": "navegante.pt",
+      "category": "transport",
+      "parent_company": "Transportes Metropolitanos de Lisboa",
+      "likely_controller_group": "TML / Navegante",
+      "priority": "P2",
+      "reason_for_candidate": "Mobility card/account and support data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Booking.com",
+      "domain": "booking.com",
+      "category": "travel",
+      "parent_company": "Booking Holdings",
+      "likely_controller_group": "Booking.com",
+      "priority": "P1",
+      "reason_for_candidate": "Accommodation bookings, destinations, messages and payments.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Airbnb",
+      "domain": "airbnb.com",
+      "category": "travel",
+      "parent_company": "Airbnb",
+      "likely_controller_group": "Airbnb",
+      "priority": "P1",
+      "reason_for_candidate": "Bookings, messages, identity verification and payments.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Expedia",
+      "domain": "expedia.com",
+      "category": "travel",
+      "parent_company": "Expedia Group",
+      "likely_controller_group": "Expedia Group",
+      "priority": "P2",
+      "reason_for_candidate": "Travel searches and bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Hotels.com",
+      "domain": "hotels.com",
+      "category": "travel",
+      "parent_company": "Expedia Group",
+      "likely_controller_group": "Expedia Group",
+      "priority": "P2",
+      "reason_for_candidate": "Accommodation searches and bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Hostelworld",
+      "domain": "hostelworld.com",
+      "category": "travel",
+      "parent_company": "Hostelworld Group",
+      "likely_controller_group": "Hostelworld",
+      "priority": "P2",
+      "reason_for_candidate": "Hostel bookings and traveller profile.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Agoda",
+      "domain": "agoda.com",
+      "category": "travel",
+      "parent_company": "Booking Holdings",
+      "likely_controller_group": "Booking Holdings",
+      "priority": "P2",
+      "reason_for_candidate": "Accommodation searches and bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Trip.com",
+      "domain": "trip.com",
+      "category": "travel",
+      "parent_company": "Trip.com Group",
+      "likely_controller_group": "Trip.com Group",
+      "priority": "P2",
+      "reason_for_candidate": "Travel searches and bookings.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Tripadvisor",
+      "domain": "tripadvisor.com",
+      "category": "travel",
+      "parent_company": "Tripadvisor",
+      "likely_controller_group": "Tripadvisor",
+      "priority": "P2",
+      "reason_for_candidate": "Travel searches, reviews and account history.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Skyscanner",
+      "domain": "skyscanner.net",
+      "category": "travel",
+      "parent_company": "Trip.com Group",
+      "likely_controller_group": "Skyscanner / Trip.com",
+      "priority": "P2",
+      "reason_for_candidate": "Flight searches, alerts and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Continente",
+      "domain": "continente.pt",
+      "category": "retail",
+      "parent_company": "MC Sonae",
+      "likely_controller_group": "MC / Continente",
+      "priority": "P1",
+      "reason_for_candidate": "Cartão Continente, purchases, coupons and online shopping.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Worten",
+      "domain": "worten.pt",
+      "category": "retail",
+      "parent_company": "Sonae",
+      "likely_controller_group": "Worten / Sonae",
+      "priority": "P1",
+      "reason_for_candidate": "Purchases, devices, repairs and online account.",
+      "status": "candidate"
+    },
+    {
+      "brand": "FNAC Portugal",
+      "domain": "fnac.pt",
+      "category": "retail",
+      "parent_company": "Fnac Darty",
+      "likely_controller_group": "FNAC",
+      "priority": "P1",
+      "reason_for_candidate": "Purchases, membership and online account.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Lidl Portugal",
+      "domain": "lidl.pt",
+      "category": "retail",
+      "parent_company": "Schwarz Group",
+      "likely_controller_group": "Lidl",
+      "priority": "P1",
+      "reason_for_candidate": "Lidl Plus loyalty, purchases, coupons and app usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Pingo Doce",
+      "domain": "pingodoce.pt",
+      "category": "retail",
+      "parent_company": "Jerónimo Martins",
+      "likely_controller_group": "Pingo Doce / Jerónimo Martins",
+      "priority": "P2",
+      "reason_for_candidate": "App/loyalty and marketing activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Auchan Portugal",
+      "domain": "auchan.pt",
+      "category": "retail",
+      "parent_company": "Auchan Retail",
+      "likely_controller_group": "Auchan",
+      "priority": "P2",
+      "reason_for_candidate": "Online shopping and loyalty data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "IKEA Portugal",
+      "domain": "ikea.com",
+      "category": "retail",
+      "parent_company": "Ingka Group",
+      "likely_controller_group": "IKEA",
+      "priority": "P2",
+      "reason_for_candidate": "IKEA Family, purchases and online activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Decathlon Portugal",
+      "domain": "decathlon.pt",
+      "category": "retail",
+      "parent_company": "Decathlon",
+      "likely_controller_group": "Decathlon",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, membership and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Leroy Merlin Portugal",
+      "domain": "leroymerlin.pt",
+      "category": "retail",
+      "parent_company": "ADEO",
+      "likely_controller_group": "Leroy Merlin / ADEO",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases and customer account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "El Corte Inglés Portugal",
+      "domain": "elcorteingles.pt",
+      "category": "retail",
+      "parent_company": "El Corte Inglés",
+      "likely_controller_group": "El Corte Inglés",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, loyalty/card and online activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Zara",
+      "domain": "zara.com",
+      "category": "retail_fashion",
+      "parent_company": "Inditex",
+      "likely_controller_group": "Inditex",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, returns and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Pull&Bear",
+      "domain": "pullandbear.com",
+      "category": "retail_fashion",
+      "parent_company": "Inditex",
+      "likely_controller_group": "Inditex",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, returns and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Bershka",
+      "domain": "bershka.com",
+      "category": "retail_fashion",
+      "parent_company": "Inditex",
+      "likely_controller_group": "Inditex",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, returns and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Stradivarius",
+      "domain": "stradivarius.com",
+      "category": "retail_fashion",
+      "parent_company": "Inditex",
+      "likely_controller_group": "Inditex",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, returns and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "H&M",
+      "domain": "hm.com",
+      "category": "retail_fashion",
+      "parent_company": "H&M Group",
+      "likely_controller_group": "H&M",
+      "priority": "P2",
+      "reason_for_candidate": "Member account, purchases and preferences.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Mango",
+      "domain": "mango.com",
+      "category": "retail_fashion",
+      "parent_company": "Mango",
+      "likely_controller_group": "Mango",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Wise",
+      "domain": "wise.com",
+      "category": "finance_payments",
+      "parent_company": "Wise",
+      "likely_controller_group": "Wise",
+      "priority": "P2",
+      "reason_for_candidate": "Transfers, recipients, identity and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "MB WAY / SIBS",
+      "domain": "mbway.pt",
+      "category": "finance_payments",
+      "parent_company": "SIBS",
+      "likely_controller_group": "SIBS",
+      "priority": "P2",
+      "reason_for_candidate": "Payment service activity and linked identifiers.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Klarna",
+      "domain": "klarna.com",
+      "category": "finance_payments",
+      "parent_company": "Klarna",
+      "likely_controller_group": "Klarna",
+      "priority": "P2",
+      "reason_for_candidate": "Payments, purchases and identity data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Coinbase",
+      "domain": "coinbase.com",
+      "category": "crypto",
+      "parent_company": "Coinbase",
+      "likely_controller_group": "Coinbase",
+      "priority": "P2",
+      "reason_for_candidate": "Crypto transactions, KYC and device/account logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Binance",
+      "domain": "binance.com",
+      "category": "crypto",
+      "parent_company": "Binance",
+      "likely_controller_group": "Binance",
+      "priority": "P2",
+      "reason_for_candidate": "Crypto transactions, KYC and device/account logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Kraken",
+      "domain": "kraken.com",
+      "category": "crypto",
+      "parent_company": "Payward / Kraken",
+      "likely_controller_group": "Kraken",
+      "priority": "P2",
+      "reason_for_candidate": "Crypto transactions, KYC and device/account logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Crypto.com",
+      "domain": "crypto.com",
+      "category": "crypto",
+      "parent_company": "Crypto.com",
+      "likely_controller_group": "Crypto.com",
+      "priority": "P2",
+      "reason_for_candidate": "Crypto transactions, KYC and device/account logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Trading 212",
+      "domain": "trading212.com",
+      "category": "investing",
+      "parent_company": "Trading 212",
+      "likely_controller_group": "Trading 212",
+      "priority": "P2",
+      "reason_for_candidate": "Brokerage positions, orders, KYC and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "eToro",
+      "domain": "etoro.com",
+      "category": "investing",
+      "parent_company": "eToro",
+      "likely_controller_group": "eToro",
+      "priority": "P2",
+      "reason_for_candidate": "Investing activity, KYC and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "XTB",
+      "domain": "xtb.com",
+      "category": "investing",
+      "parent_company": "XTB",
+      "likely_controller_group": "XTB",
+      "priority": "P2",
+      "reason_for_candidate": "Brokerage activity, KYC and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "GitLab",
+      "domain": "gitlab.com",
+      "category": "developer",
+      "parent_company": "GitLab",
+      "likely_controller_group": "GitLab",
+      "priority": "P2",
+      "reason_for_candidate": "Repositories, authentication and activity logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Bitbucket",
+      "domain": "bitbucket.org",
+      "category": "developer",
+      "parent_company": "Atlassian",
+      "likely_controller_group": "Atlassian",
+      "priority": "P2",
+      "reason_for_candidate": "Repositories and Atlassian-linked account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Atlassian",
+      "domain": "atlassian.com",
+      "category": "productivity",
+      "parent_company": "Atlassian",
+      "likely_controller_group": "Atlassian",
+      "priority": "P2",
+      "reason_for_candidate": "Jira/Confluence/Trello identity and workspace activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Trello",
+      "domain": "trello.com",
+      "category": "productivity",
+      "parent_company": "Atlassian",
+      "likely_controller_group": "Atlassian",
+      "priority": "P2",
+      "reason_for_candidate": "Boards and Atlassian-linked account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Slack",
+      "domain": "slack.com",
+      "category": "productivity",
+      "parent_company": "Salesforce",
+      "likely_controller_group": "Slack",
+      "priority": "P2",
+      "reason_for_candidate": "Workspace membership, messages and activity depending on workspace.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Discord",
+      "domain": "discord.com",
+      "category": "messaging",
+      "parent_company": "Discord",
+      "likely_controller_group": "Discord",
+      "priority": "P1",
+      "reason_for_candidate": "Messages, communities, devices and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Zoom",
+      "domain": "zoom.us",
+      "category": "productivity",
+      "parent_company": "Zoom",
+      "likely_controller_group": "Zoom",
+      "priority": "P2",
+      "reason_for_candidate": "Meetings, account and device metadata.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Dropbox",
+      "domain": "dropbox.com",
+      "category": "technology_cloud",
+      "parent_company": "Dropbox",
+      "likely_controller_group": "Dropbox",
+      "priority": "P2",
+      "reason_for_candidate": "Cloud files, sharing and account/device logs.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Canva",
+      "domain": "canva.com",
+      "category": "productivity",
+      "parent_company": "Canva",
+      "likely_controller_group": "Canva",
+      "priority": "P2",
+      "reason_for_candidate": "Designs, uploads and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Hugging Face",
+      "domain": "huggingface.co",
+      "category": "developer_ai",
+      "parent_company": "Hugging Face",
+      "likely_controller_group": "Hugging Face",
+      "priority": "P1",
+      "reason_for_candidate": "Models/datasets, tokens, repositories and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Kaggle",
+      "domain": "kaggle.com",
+      "category": "developer_ai",
+      "parent_company": "Alphabet",
+      "likely_controller_group": "Google",
+      "priority": "P1",
+      "reason_for_candidate": "Datasets, notebooks, competitions and Google-linked identity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Anthropic / Claude",
+      "domain": "anthropic.com",
+      "category": "ai",
+      "parent_company": "Anthropic",
+      "likely_controller_group": "Anthropic",
+      "priority": "P2",
+      "reason_for_candidate": "AI account and conversation/product usage if used.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Perplexity",
+      "domain": "perplexity.ai",
+      "category": "ai",
+      "parent_company": "Perplexity AI",
+      "likely_controller_group": "Perplexity",
+      "priority": "P2",
+      "reason_for_candidate": "Search/chat history and account activity if used.",
+      "status": "candidate"
+    },
+    {
+      "brand": "JetBrains",
+      "domain": "jetbrains.com",
+      "category": "developer",
+      "parent_company": "JetBrains",
+      "likely_controller_group": "JetBrains",
+      "priority": "P2",
+      "reason_for_candidate": "IDE licenses, account and marketplace activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Docker Hub",
+      "domain": "docker.com",
+      "category": "developer",
+      "parent_company": "Docker",
+      "likely_controller_group": "Docker",
+      "priority": "P2",
+      "reason_for_candidate": "Images, repositories and authentication activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Stack Overflow",
+      "domain": "stackoverflow.com",
+      "category": "developer",
+      "parent_company": "Stack Exchange",
+      "likely_controller_group": "Stack Exchange",
+      "priority": "P2",
+      "reason_for_candidate": "Developer Q&A account and activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Cloudflare",
+      "domain": "cloudflare.com",
+      "category": "developer",
+      "parent_company": "Cloudflare",
+      "likely_controller_group": "Cloudflare",
+      "priority": "P2",
+      "reason_for_candidate": "Web/account security and access logs if an account exists.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Reddit",
+      "domain": "reddit.com",
+      "category": "social",
+      "parent_company": "Reddit",
+      "likely_controller_group": "Reddit",
+      "priority": "P1",
+      "reason_for_candidate": "Posts, comments, messages, subscriptions and activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "LinkedIn",
+      "domain": "linkedin.com",
+      "category": "social",
+      "parent_company": "Microsoft",
+      "likely_controller_group": "LinkedIn",
+      "priority": "P1",
+      "reason_for_candidate": "Professional profile, messages, applications and activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "X / Twitter",
+      "domain": "x.com",
+      "category": "social",
+      "parent_company": "X Corp.",
+      "likely_controller_group": "X",
+      "priority": "P2",
+      "reason_for_candidate": "Social posts, DMs, advertising and activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "TikTok",
+      "domain": "tiktok.com",
+      "category": "social",
+      "parent_company": "ByteDance",
+      "likely_controller_group": "TikTok",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing, social graph, device and advertising data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Telegram",
+      "domain": "telegram.org",
+      "category": "messaging",
+      "parent_company": "Telegram",
+      "likely_controller_group": "Telegram",
+      "priority": "P2",
+      "reason_for_candidate": "Account and cloud chats depending on usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Pinterest",
+      "domain": "pinterest.com",
+      "category": "social",
+      "parent_company": "Pinterest",
+      "likely_controller_group": "Pinterest",
+      "priority": "P3",
+      "reason_for_candidate": "Saved content, interests and advertising profile.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Twitch",
+      "domain": "twitch.tv",
+      "category": "media",
+      "parent_company": "Amazon",
+      "likely_controller_group": "Amazon / Twitch",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing, subscriptions, chat and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Netflix",
+      "domain": "netflix.com",
+      "category": "media",
+      "parent_company": "Netflix",
+      "likely_controller_group": "Netflix",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing history, devices and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Disney+",
+      "domain": "disneyplus.com",
+      "category": "media",
+      "parent_company": "The Walt Disney Company",
+      "likely_controller_group": "Disney",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing, devices and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Max",
+      "domain": "max.com",
+      "category": "media",
+      "parent_company": "Warner Bros. Discovery",
+      "likely_controller_group": "Warner Bros. Discovery",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing, devices and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Prime Video",
+      "domain": "primevideo.com",
+      "category": "media",
+      "parent_company": "Amazon",
+      "likely_controller_group": "Amazon",
+      "priority": "P2",
+      "reason_for_candidate": "Viewing activity linked to Amazon account.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Steam",
+      "domain": "steampowered.com",
+      "category": "gaming",
+      "parent_company": "Valve",
+      "likely_controller_group": "Valve / Steam",
+      "priority": "P2",
+      "reason_for_candidate": "Purchases, play history, social and device data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Epic Games",
+      "domain": "epicgames.com",
+      "category": "gaming",
+      "parent_company": "Epic Games",
+      "likely_controller_group": "Epic Games",
+      "priority": "P2",
+      "reason_for_candidate": "Games, purchases, devices and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "PlayStation",
+      "domain": "playstation.com",
+      "category": "gaming",
+      "parent_company": "Sony Interactive Entertainment",
+      "likely_controller_group": "PlayStation / Sony",
+      "priority": "P2",
+      "reason_for_candidate": "Games, purchases, devices and social data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Xbox",
+      "domain": "xbox.com",
+      "category": "gaming",
+      "parent_company": "Microsoft",
+      "likely_controller_group": "Microsoft",
+      "priority": "P2",
+      "reason_for_candidate": "Games, purchases and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Nintendo",
+      "domain": "nintendo.com",
+      "category": "gaming",
+      "parent_company": "Nintendo",
+      "likely_controller_group": "Nintendo",
+      "priority": "P2",
+      "reason_for_candidate": "Games, purchases and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Cardmarket",
+      "domain": "cardmarket.com",
+      "category": "tcg",
+      "parent_company": "Sammelkartenmarkt",
+      "likely_controller_group": "Cardmarket",
+      "priority": "P1",
+      "reason_for_candidate": "TCG marketplace purchases, sales, addresses and messages.",
+      "status": "candidate"
+    },
+    {
+      "brand": "BoardGameGeek",
+      "domain": "boardgamegeek.com",
+      "category": "gaming",
+      "parent_company": "BoardGameGeek",
+      "likely_controller_group": "BoardGameGeek",
+      "priority": "P2",
+      "reason_for_candidate": "Board-game collection, posts and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "ORCID",
+      "domain": "orcid.org",
+      "category": "academia",
+      "parent_company": "ORCID",
+      "likely_controller_group": "ORCID",
+      "priority": "P1",
+      "reason_for_candidate": "Persistent researcher identity and profile activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "ResearchGate",
+      "domain": "researchgate.net",
+      "category": "academia",
+      "parent_company": "ResearchGate",
+      "likely_controller_group": "ResearchGate",
+      "priority": "P1",
+      "reason_for_candidate": "Research profile, publications, messages and usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Academia.edu",
+      "domain": "academia.edu",
+      "category": "academia",
+      "parent_company": "Academia",
+      "likely_controller_group": "Academia.edu",
+      "priority": "P2",
+      "reason_for_candidate": "Research profile, uploads and usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Elsevier / ScienceDirect",
+      "domain": "elsevier.com",
+      "category": "academia",
+      "parent_company": "RELX",
+      "likely_controller_group": "Elsevier / RELX",
+      "priority": "P1",
+      "reason_for_candidate": "Publishing, article access and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Scopus",
+      "domain": "scopus.com",
+      "category": "academia",
+      "parent_company": "RELX",
+      "likely_controller_group": "Elsevier / RELX",
+      "priority": "P2",
+      "reason_for_candidate": "Researcher/profile and usage data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Mendeley",
+      "domain": "mendeley.com",
+      "category": "academia",
+      "parent_company": "RELX",
+      "likely_controller_group": "Elsevier / RELX",
+      "priority": "P2",
+      "reason_for_candidate": "Reference library, profile and usage.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Springer Nature",
+      "domain": "springernature.com",
+      "category": "academia",
+      "parent_company": "Springer Nature",
+      "likely_controller_group": "Springer Nature",
+      "priority": "P1",
+      "reason_for_candidate": "Publishing/submission and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Wiley",
+      "domain": "wiley.com",
+      "category": "academia",
+      "parent_company": "Wiley",
+      "likely_controller_group": "Wiley",
+      "priority": "P2",
+      "reason_for_candidate": "Publishing/submission and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Taylor & Francis",
+      "domain": "tandfonline.com",
+      "category": "academia",
+      "parent_company": "Informa",
+      "likely_controller_group": "Taylor & Francis / Informa",
+      "priority": "P2",
+      "reason_for_candidate": "Publishing/submission and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "JSTOR",
+      "domain": "jstor.org",
+      "category": "academia",
+      "parent_company": "ITHAKA",
+      "likely_controller_group": "JSTOR / ITHAKA",
+      "priority": "P2",
+      "reason_for_candidate": "Research access and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Web of Science",
+      "domain": "webofscience.com",
+      "category": "academia",
+      "parent_company": "Clarivate",
+      "likely_controller_group": "Clarivate",
+      "priority": "P2",
+      "reason_for_candidate": "Researcher/profile and usage data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Zotero",
+      "domain": "zotero.org",
+      "category": "academia",
+      "parent_company": "Corporation for Digital Scholarship",
+      "likely_controller_group": "Zotero",
+      "priority": "P1",
+      "reason_for_candidate": "Reference library sync/account if used.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Overleaf",
+      "domain": "overleaf.com",
+      "category": "academia",
+      "parent_company": "Digital Science / Overleaf",
+      "likely_controller_group": "Overleaf",
+      "priority": "P1",
+      "reason_for_candidate": "LaTeX projects, collaborations and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "IEEE",
+      "domain": "ieee.org",
+      "category": "academia",
+      "parent_company": "IEEE",
+      "likely_controller_group": "IEEE",
+      "priority": "P2",
+      "reason_for_candidate": "Membership, submissions and publication activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "ACM",
+      "domain": "acm.org",
+      "category": "academia",
+      "parent_company": "ACM",
+      "likely_controller_group": "ACM",
+      "priority": "P2",
+      "reason_for_candidate": "Membership, publications and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Frontiers",
+      "domain": "frontiersin.org",
+      "category": "academia",
+      "parent_company": "Frontiers",
+      "likely_controller_group": "Frontiers",
+      "priority": "P2",
+      "reason_for_candidate": "Submission/review and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "MDPI",
+      "domain": "mdpi.com",
+      "category": "academia",
+      "parent_company": "MDPI",
+      "likely_controller_group": "MDPI",
+      "priority": "P2",
+      "reason_for_candidate": "Submission/review and account activity.",
+      "status": "candidate"
+    },
+    {
+      "brand": "ScholarOne",
+      "domain": "clarivate.com",
+      "category": "academia",
+      "parent_company": "Clarivate",
+      "likely_controller_group": "Clarivate / ScholarOne",
+      "priority": "P2",
+      "reason_for_candidate": "Journal submission/review identities across publishers.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Editorial Manager",
+      "domain": "ariessys.com",
+      "category": "academia",
+      "parent_company": "Aries Systems / Elsevier",
+      "likely_controller_group": "Aries / Editorial Manager",
+      "priority": "P2",
+      "reason_for_candidate": "Journal submission/review identities across publishers.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Zenodo",
+      "domain": "zenodo.org",
+      "category": "academia",
+      "parent_company": "CERN",
+      "likely_controller_group": "Zenodo / CERN",
+      "priority": "P1",
+      "reason_for_candidate": "Research deposits and account data.",
+      "status": "candidate"
+    },
+    {
+      "brand": "OSF",
+      "domain": "osf.io",
+      "category": "academia",
+      "parent_company": "Center for Open Science",
+      "likely_controller_group": "OSF",
+      "priority": "P1",
+      "reason_for_candidate": "Research projects, files and collaborations.",
+      "status": "candidate"
+    },
+    {
+      "brand": "Figshare",
+      "domain": "figshare.com",
+      "category": "academia",
+      "parent_company": "Digital Science",
+      "likely_controller_group": "Figshare",
+      "priority": "P2",
+      "reason_for_candidate": "Research deposits and account data.",
+      "status": "candidate"
+    }
+  ]
+}

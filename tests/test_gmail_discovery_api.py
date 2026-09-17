@@ -70,8 +70,10 @@ def test_gmail_discovery_endpoint_saves_companies_and_accounts(client: TestClien
     assert {result["domain"] for result in results} == {"example.com", "other.test"}
     example = next(result for result in results if result["domain"] == "example.com")
     assert example["company_name"] == "Example"
-    assert example["sender_email"] == "welcome@example.com"
-    assert example["subject"] == "Welcome to Example"
+    # The aggregator intentionally retains the strongest account evidence for a
+    # canonical service, not necessarily the first message it encountered.
+    assert example["sender_email"] == "security@example.com"
+    assert example["subject"] == "Verify your email"
     assert example["message_count"] == 2
     assert example["confidence_score"] > 0.45
 
@@ -84,5 +86,8 @@ def test_gmail_discovery_endpoint_saves_companies_and_accounts(client: TestClien
 
     accounts_response = client.get("/accounts")
     assert accounts_response.status_code == 200
-    assert len(accounts_response.json()) == 2
-
+    accounts = accounts_response.json()
+    assert len(accounts) == 2
+    example_account = next(item for item in accounts if item["label"] == "Example")
+    assert example_account["account_identifier"] is None
+    assert example_account["discovery_sender_email"] == "security@example.com"

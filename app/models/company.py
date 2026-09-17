@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, Integer, String, Text, func
+from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -20,6 +20,14 @@ class Company(Base):
     discovery_first_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     discovery_last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     discovery_message_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    discovery_raw_domain: Mapped[str | None] = mapped_column(String(255))
+    discovery_canonical_domain: Mapped[str | None] = mapped_column(String(255), index=True)
+    discovery_classification: Mapped[str | None] = mapped_column(String(32), index=True)
+    discovery_relationship: Mapped[str | None] = mapped_column(String(100))
+    discovery_likely_controller: Mapped[str | None] = mapped_column(String(500))
+    discovery_requires_controller_review: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    discovery_dsar_eligible: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    discovery_classification_reason: Mapped[str | None] = mapped_column(Text)
     controller_name: Mapped[str | None] = mapped_column(String(500))
     controller_country: Mapped[str | None] = mapped_column(String(255))
     controller_address: Mapped[str | None] = mapped_column(Text)

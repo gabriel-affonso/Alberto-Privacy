@@ -68,5 +68,12 @@ def _company_to_result(company: Company, account: Account | None) -> GmailDiscov
         last_seen_at=company.discovery_last_seen_at,
         message_count=company.discovery_message_count,
         confidence_score=company.discovery_confidence_score,
+        raw_domain=company.discovery_raw_domain,
+        canonical_domain=company.discovery_canonical_domain,
+        classification=company.discovery_classification,
+        relationship=company.discovery_relationship,
+        likely_controller=company.discovery_likely_controller,
+        requires_controller_review=company.discovery_requires_controller_review,
+        dsar_eligible=company.discovery_dsar_eligible,
+        classification_reason=company.discovery_classification_reason,
     )
-

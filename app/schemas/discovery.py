@@ -18,6 +18,13 @@ class GmailDiscoveryResultRead(BaseModel):
     last_seen_at: datetime | None
     message_count: int
     confidence_score: float | None
+    raw_domain: str | None = None
+    canonical_domain: str | None = None
+    classification: str | None = None
+    relationship: str | None = None
+    likely_controller: str | None = None
+    requires_controller_review: bool = False
+    dsar_eligible: bool = False
+    classification_reason: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
-
